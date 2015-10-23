@@ -1,0 +1,27 @@
+{
+  "name": "bts",
+  "author": "Saswata Basu",
+  "version": "1.0.0",
+  "description": "bts - firmware to talk to cloud and sensors",
+  "main": "bts.js",
+  "dependencies": {
+    "async": "^0.2.10",
+    "bluetooth-hci-socket": "^0.4.0",
+    "ddp": "^0.11.0",
+    "ejson": "^2.1.1",
+    "bplist-parser": "^0.0.6",
+    "wget-improved": "^1.1.1",
+    "debug": "^0.7.4",
+    "underscore": "^1.8.3",
+    "websocket": "^1.0.21",
+    "xpc-connection": "^0.1.3",
+    "winston": "^1.0.1",
+    "noble": "^1.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

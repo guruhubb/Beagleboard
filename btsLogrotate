@@ -1,0 +1,25 @@
+# need to cp to logrotate location - enter the command below
+# sudo cp ~/code/btsLogrotate /etc/logrotate.d/btsLogrotate
+/var/log/bts.log {
+	weekly
+	rotate 12
+	size 50M
+	compress
+	delaycompress
+	missingok
+	notifempty
+	create 644 root root
+}
+
+# make sure logrotate is executed daily /etc/cron.daily/logrotate
+# check status with... cat /var/lib/logrotate/status
+# execute logrotate...logrotate -df /etc/logrotate.d/btsLogrotate
+
+# daily - monitor interval of bts.log
+# rotate 12 - 12 days of log will be kept
+# size 50M - max size, takes precedence over interval
+# compress - gzip file
+# delaycompress - last file not compressed
+# missingok - avoids halting on error and goes to next log file
+# notifempty - no log rotation if empty
+# create new empty log file with <mode> <owner> <group> spec

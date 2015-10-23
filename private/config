@@ -1,0 +1,18 @@
+# contents of ~/.ssh/config
+# cp ~/code/private/config ~/.ssh/config
+
+Host tunnel
+    HostName www.ezgrowr.com
+    RemoteForward 13200 localhost:22
+    IdentityFile ~/.ssh/privateKey
+    LogLevel=error
+    UserKnownHostsFile=/dev/null
+    StrictHostKeyChecking=no
+    User root
+
+Host cloud
+    HostName www.ezgrowr.com
+    IdentityFile ~/.ssh/privateKey
+    UserKnownHostsFile=/dev/null
+    StrictHostKeyChecking=no
+    User root
