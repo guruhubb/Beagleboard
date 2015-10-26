@@ -749,7 +749,7 @@ function ledOff (callback) {
 };
 
 
-function upgrade () {
+function upgradeOld () {
   logger.info('upgradeFW...');
   // var wget = require('/usr/local/lib/node_modules/wget-improved');
   var src = 'https://sbasu123@bitbucket.org/growr/growr.git';
@@ -927,7 +927,7 @@ function restart () {
   ]);
 }
 
-function upgradeSW () {
+function upgrade () {
   logger.info('upgrade fw ...');
   async.series ([
     function(callback){
@@ -938,7 +938,7 @@ function upgradeSW () {
     function(){
       logger.error('Upgrading FW ...')
       setTimeout(function(){
-        execute('git pull origin master', function(callback){
+        execute('git pull', function(callback){
           logger.warn(callback);
         });
       }, 1500);
