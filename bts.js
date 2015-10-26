@@ -938,7 +938,7 @@ function upgrade () {
     function(){
       logger.error('Upgrading FW ...')
       setTimeout(function(){
-        execute('git pull', function(callback){
+        execute('sudo git pull', function(callback){
           logger.warn(callback);
         });
       }, 1500);
