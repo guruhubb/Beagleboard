@@ -20,7 +20,7 @@ var ejson = require('ejson');
 var DDPClient = require('ddp');
 var git    = require('gitty');
 var myRepo = git('~/bts');
-var tunnel = require('../');
+var tunnel = require('tunnel-ssh');
 
 
 // require('shelljs/global');
