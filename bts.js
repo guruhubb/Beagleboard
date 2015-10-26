@@ -11,6 +11,8 @@ var fs = require('fs');
 var logger = require('./logger')
 var path = require('path');
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
+var child;
 var wget = require('wget-improved');
 var async = require('async');
 var noble = require('noble/index');
@@ -403,6 +405,9 @@ function explore(peripheral,callback) {
     // logger.info('inside connect function...');
     if (!err) {
       logger.debug("connected to ... ",peripheral.uuid);
+      if (!peripheral){
+        logger.error('Error20 - peripheral error: ',err);
+      }
         peripheral.discoverSomeServicesAndCharacteristics(readServList, readCharList, function(error, services, characteristics){
           if (!error){
             readWriteToBLE(peripheral,services,characteristics);
@@ -768,13 +773,13 @@ function upgrade () {
 
 function reverse () {
   logger.info('reverseSSH...');
-  function execute(command, callback){
-      exec(command, function(error, stdout, stderr){ 
-        if (error) callback(error);
-        else if (stderr) callback(stderr);
-        else callback(stdout); 
-      });
-  }
+  // function execute(command, callback){
+  //     exec(command, function(error, stdout, stderr){ 
+  //       if (error) callback(error);
+  //       else if (stderr) callback(stderr);
+  //       else callback(stdout); 
+  //     });
+  // }
   async.series ([
     function(callback){
       reverseSSH = false;
@@ -784,6 +789,27 @@ function reverse () {
     function(){
       logger.error('Setting up reverseSSH...')
       setTimeout(function(){
+        // execute('sshpass -p growr123 ssh -f -N -T -R13200:localhost:22 grow@www.ezgrowr.com', function(callback){
+        // // execute('./tunnel.sh', function(callback){
+        // //   execute('ssh -v -f -N -T -R13200:localhost:22 grow@www.ezgrowr.com ~/.ssh/id_rsa -o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null -o UserKnownHostsFile=/dev/null', function(callback){
+        //   logger.warn(callback);
+        //   logger.warn("Enter 'ssh -p 13200 wattup@localhost' to access bts");
+        // });
+
+         child = spawn('sshpass',[ '-p','growr123','-v','-tt','ssh','-f','-N','-T',
+          '-R13200:localhost:22','grow@www.ezgrowr.com','-o','UserKnownHostsFile=/dev/null', 
+          '-o','StrictHostKeyChecking=no','-o','GlobalKnownHostsFile=/dev/null'],
+          { detached: true, stdio: ['ignore','ignore','ignore']});
+        // child = spawn('sudo',[ 'ssh','-f','-N','-T','-R13200:localhost:22','grow@www.ezgrowr.com','/home/wattup/.ssh/id_rsa'],
+        //   { detached: true, stdio: ['ignore','ignore','ignore']});
+
+
+         // child = spawn('sshpass',[ '-p','growr123','ssh','-v','-tt','-f','-N','-T',
+         //  '-R13200:localhost:22','grow@www.ezgrowr.com'],{ detached: true, stdio: ['ignore','ignore','ignore']});
+         child.unref();
+        // Async call to exec()
+        // child = spawn('ssh',['-v','-f','-N','-T','-R13200:localhost:22','grow@ezgrowr.com','~./ssh/id_rsa',
+        //   '-o','UserKnownHostsFile=/dev/null', '-o','StrictHostKeyChecking=no','-o','GlobalKnownHostsFile=/dev/null']);
         // Async call to exec()
         // exec('./tunnel.sh &', function(status, output) {
         //   console.log('Exit status:', status);
@@ -792,24 +818,40 @@ function reverse () {
         // run_cmd( "sudo ./tunnel.sh &", function(callback) { 
           // execute('sudo ./tunnel.sh', function(callback){
           // execute('ssh -f -N -T tunnel', function(callback){
-          execute('sudo ssh -f -N -T -R13200:localhost:22 root@www.ezgrowr.com ~./private/privateKey', function(callback){
-            logger.warn(callback);
-            logger.warn("Enter 'ssh -p 13200 wattup@localhost' to access bts");
-          });
-      }, 1500);
+          // execute('sudo ssh -f -N -T -R13200:localhost:22 root@www.ezgrowr.com ~./private/privateKey', function(callback){
+            // logger.warn(callback);
+      //       logger.warn("Enter 'ssh -p 13200 wattup@localhost' to access bts");
+      //     // });
+      // Listen for stdout data
+      //   child.stdout.on('data', function (data) {
+      //       logger.info(">>>>>>>>>> Got data from child: " + data);
+      //   });
+      // // Listen for stderr data
+
+      //   child.stderr.on('data',
+      //       function (data) {
+      //           logger.error('>>>>>>>>>> err data: ' + data);
+      //       }
+      //   );
+      //   // Listen for an exit event:
+      //   child.on('exit', function (exitCode) {
+      //       console.warn(">>>>>>>>>> Child exited with code: " + exitCode);
+      //   });
+      }, 2500);
     }
   ]);
 }
 
+
 function closeSSH () {
   logger.info('close tunnel...');
-  function execute(command, callback){
-      exec(command, function(error, stdout, stderr){ 
-        if (error) callback(error);
-        else if (stderr) callback(stderr);
-        else callback(stdout); 
-      });
-  }
+  // function execute(command, callback){
+  //     exec(command, function(error, stdout, stderr){ 
+  //       if (error) callback(error);
+  //       else if (stderr) callback(stderr);
+  //       else callback(stdout); 
+  //     });
+  // }
   async.series ([
     function(callback){
       closeTunnel = false;
@@ -819,25 +861,35 @@ function closeSSH () {
     function(){
       logger.error('Closing tunnel...')
       setTimeout(function(){
-          execute('sudo kill $(pidoff ssh)', function(callback){
-            logger.warn(callback);
-            logger.warn("Closed tunnel");
-          });
+        if (child){
+          child.kill();
+        }
+          // execute('sudo kill $(pidoff ssh)', function(callback){
+          //   logger.warn(callback);
+          //   logger.warn("Closed tunnel");
+          // });
       }, 1500);
     }
   ]);
 }
 
+function execute(command, callback){
+    exec(command, function(error, stdout, stderr){ 
+      if (error) callback(error);
+      else if (stderr) callback(stderr);
+      else callback(stdout); 
+    });
+}
 
 function reboot () {
   logger.info('rebootBB...');
-  function execute(command, callback){
-      exec(command, function(error, stdout, stderr){ 
-        if (error) callback(error);
-        else if (stderr) callback(stderr);
-        else callback(stdout); 
-      });
-  }
+  // function execute(command, callback){
+  //     exec(command, function(error, stdout, stderr){ 
+  //       if (error) callback(error);
+  //       else if (stderr) callback(stderr);
+  //       else callback(stdout); 
+  //     });
+  // }
   async.series ([
     function(callback){
       rebootBB = false;
@@ -897,12 +949,12 @@ function upgradeSW () {
 function getSerialNumber() {
   logger.info('getSerialNumber ...');
   // var exec = require('child_process').exec;
-  function execute(command, callback){
-      exec(command, function(error, stdout, stderr){ callback(stdout); });
-  }
-  execute('sudo ./btsSerialNumber.sh', function(text){
-    logger.warn(text);
-    btsID = text;
+  // function execute(command, callback){
+  //     exec(command, function(error, stdout, stderr){ callback(stdout); });
+  // }
+  execute('sudo ./btsSerialNumber.sh', function(callback){
+    logger.warn(callback);
+    btsID = callback;
     logger.warn('btsID = ',btsID);
   });
 }
