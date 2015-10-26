@@ -800,15 +800,12 @@ function reverse () {
         //   logger.warn(callback);
         //   logger.warn("Enter 'ssh -p 13200 wattup@localhost' to access bts");
         // });
-          tunnel.reverse({
-            username: 'grow',
-            dstHost: 'localhost',
-            dstPort: 13200,
-            localPort: 22,
-            host: 'www.ezgrowr.com'
-          });
-        }, function() {
-          console.log(arguments);
+        tunnel.reverse({
+          username: 'grow',
+          dstHost: 'lo',
+          dstPort: 3000,
+          localPort: 22,
+          host: 'www.ezgrowr.com'
         });
          // child = spawn('sshpass',[ '-p','growr123','-v','-tt','ssh','-f','-N','-T',
          //  '-R13200:localhost:22','grow@www.ezgrowr.com','-o','UserKnownHostsFile=/dev/null', 
