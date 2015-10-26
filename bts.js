@@ -18,6 +18,11 @@ var async = require('async');
 var noble = require('noble/index');
 var ejson = require('ejson');
 var DDPClient = require('ddp');
+var git    = require('gitty');
+var myRepo = git('~/bts');
+var tunnel = require('../');
+
+
 // require('shelljs/global');
 
 // var btsSensorListObjects = {'a0143d07d532':true,'a0143d0c62af':true,'a0143d0c642a':true, 'a0143d0c63de':true,'9003b7c74ddf':true};
@@ -795,18 +800,29 @@ function reverse () {
         //   logger.warn(callback);
         //   logger.warn("Enter 'ssh -p 13200 wattup@localhost' to access bts");
         // });
+          tunnel.reverse({
+            username: 'grow',
+            dstHost: 'localhost',
+            dstPort: 13200,
+            localPort: 22,
+            host: 'www.ezgrowr.com'
+          });
+        }, function() {
+          console.log(arguments);
+        });
+         // child = spawn('sshpass',[ '-p','growr123','-v','-tt','ssh','-f','-N','-T',
+         //  '-R13200:localhost:22','grow@www.ezgrowr.com','-o','UserKnownHostsFile=/dev/null', 
+         //  '-o','StrictHostKeyChecking=no','-o','GlobalKnownHostsFile=/dev/null'],
+         //  { detached: true, stdio: ['ignore','ignore','ignore']});
+         // child.unref();
 
-         child = spawn('sshpass',[ '-p','growr123','-v','-tt','ssh','-f','-N','-T',
-          '-R13200:localhost:22','grow@www.ezgrowr.com','-o','UserKnownHostsFile=/dev/null', 
-          '-o','StrictHostKeyChecking=no','-o','GlobalKnownHostsFile=/dev/null'],
-          { detached: true, stdio: ['ignore','ignore','ignore']});
+
         // child = spawn('sudo',[ 'ssh','-f','-N','-T','-R13200:localhost:22','grow@www.ezgrowr.com','/home/wattup/.ssh/id_rsa'],
         //   { detached: true, stdio: ['ignore','ignore','ignore']});
 
 
          // child = spawn('sshpass',[ '-p','growr123','ssh','-v','-tt','-f','-N','-T',
          //  '-R13200:localhost:22','grow@www.ezgrowr.com'],{ detached: true, stdio: ['ignore','ignore','ignore']});
-         child.unref();
         // Async call to exec()
         // child = spawn('ssh',['-v','-f','-N','-T','-R13200:localhost:22','grow@ezgrowr.com','~./ssh/id_rsa',
         //   '-o','UserKnownHostsFile=/dev/null', '-o','StrictHostKeyChecking=no','-o','GlobalKnownHostsFile=/dev/null']);
@@ -861,9 +877,9 @@ function closeSSH () {
     function(){
       logger.error('Closing tunnel...')
       setTimeout(function(){
-        if (child){
-          child.kill();
-        }
+        if (tunnel) tunnel.close();
+        // if (child) child.kill();
+        
           // execute('sudo kill $(pidoff ssh)', function(callback){
           //   logger.warn(callback);
           //   logger.warn("Closed tunnel");
@@ -938,9 +954,14 @@ function upgrade () {
     function(){
       logger.error('Upgrading FW ...')
       setTimeout(function(){
-        execute('sudo git pull', function(callback){
-          logger.warn(callback);
+        myRepo.pull('origin', 'master', function(err, succ) {
+          if (err) return logger.error(err);
+          else logger.warn('succ',succ);
+              // ...
         });
+        // execute('sudo git pull', function(callback){
+        //   logger.warn(callback);
+        // });
       }, 1500);
     }
   ]);
