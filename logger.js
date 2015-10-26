@@ -8,10 +8,10 @@ var logger = new winston.Logger({
       filename: '/var/log/bts.log',
       handleExceptions: true,
       json: false,
-      // maxsize: 52428, //5MB
+      maxsize: 1000000, //~5MB
       // maxFiles: 1,
       // maxsize: 5242880, //5MB
-      // maxFiles: 5,  //make this 30
+      maxFiles: 5,  //make this 30
       colorize: true,
       timestamp: true
     }),
