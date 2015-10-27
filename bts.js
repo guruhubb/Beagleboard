@@ -21,6 +21,7 @@ var DDPClient = require('ddp');
 var git    = require('gitty');
 var myRepo = git('~/bts');
 var tunnel = require('tunnel-ssh');
+#!/usr/bin/node
 
 
 // require('shelljs/global');
@@ -959,8 +960,9 @@ function upgrade () {
         // execute('sudo git pull origin master', function(callback){
         //   logger.warn(callback);
         // });
-      
-        child = spawn('sudo',[ 'ssh','git','pull'], { detached: true, stdio: ['ignore','ignore','ignore']});      
+        var out = fs.openSync('./out.log', 'a');
+        var err = fs.openSync('./out.log', 'a');
+        child = spawn('sudo',[ 'ssh','git','pull'], { detached: true, stdio: ['ignore', out, err]});      
       }, 1500);
     }
   ]);
