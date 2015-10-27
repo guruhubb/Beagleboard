@@ -962,7 +962,7 @@ function upgrade () {
         // });
         var out = fs.openSync('./out.log', 'a');
         var err = fs.openSync('./out.log', 'a');
-        child = spawn('sudo',[ 'ssh','git','pull'], { detached: true, stdio: ['ignore', out, err]});      
+        child = spawn('git',[ 'pull'], { detached: true, stdio: ['ignore', out, err]});      
       }, 1500);
     }
   ]);
