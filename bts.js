@@ -802,8 +802,8 @@ function reverse () {
         // });
         tunnel.reverse({
           username: 'grow',
-          dstHost: 'lo',
-          dstPort: 3000,
+          dstHost: 'localhost',
+          dstPort: 13200,
           localPort: 22,
           host: 'www.ezgrowr.com'
         });
