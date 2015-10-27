@@ -21,7 +21,7 @@ var DDPClient = require('ddp');
 var git    = require('gitty');
 var myRepo = git('~/bts');
 var tunnel = require('tunnel-ssh');
-#!/usr/bin/node
+
 
 
 // require('shelljs/global');
