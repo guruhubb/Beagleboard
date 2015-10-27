@@ -951,14 +951,15 @@ function upgrade () {
     function(){
       logger.error('Upgrading FW ...')
       setTimeout(function(){
-        myRepo.pull('origin', 'master', function(err, succ) {
-          if (err) return logger.error(err);
-          else logger.warn('succ',succ);
-              // ...
-        });
-        // execute('sudo git pull', function(callback){
+        // myRepo.pull('origin', 'master', function(err, succ) {
+        //   if (err) return logger.error('Error18:',err);
+        //   else logger.warn('**** success ****',succ);
+        //       // ...
+        // });
+        // execute('sudo git pull origin master', function(callback){
         //   logger.warn(callback);
         // });
+        child = spawn('sudo',[ 'ssh','git','pull'], { detached: true, stdio: ['ignore','ignore','ignore']});      
       }, 1500);
     }
   ]);
