@@ -1,6 +1,6 @@
 #!/bin/sh
 # Need to change it to executable and copy to /bin 
-# chmod +x ~/code/btsSerialNumber.sh
+# chmod +x ~/bts/btsSerialNumber.sh
 # This script reads the serial number from the i2c-connected eeprom available
 # on BeagleBone (Black). It should work both on device-tree and pre-device-tree
 # kernels.

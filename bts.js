@@ -711,8 +711,8 @@ function convertSunlightData (data) {
 
 function convertSoilElectricalConductivityData (data) {
   var rawValue = data.readUInt16LE(0) * 1.0;
-  // TODO: convert raw (0 - 1771) to 0 to 10 (mS/cm)
-  var soilElectricalConductivity = rawValue;
+  //  convert raw (0 - 1771) to 0 to 10 (mS/cm)
+  var soilElectricalConductivity = rawValue/1000;
   return soilElectricalConductivity;
 };
 
@@ -775,7 +775,7 @@ function reverse () {
     function(){
       logger.error('Setting up reverseSSH...')
       setTimeout(function(){
-        exec('sudo -u wattup ssh -f -v -T -N -R 13200:localhost:22 grow@ezgrowr.com ').code;
+        exec('sudo -u wattup ssh -f -v -T -N -R 13200:localhost:22 grow@ezgrowr.com ~/bts/private/privateKey ').code;
       }, 2500);
     }
   ]);
@@ -849,7 +849,11 @@ function upgrade () {
     function(){
       logger.error('Upgrading FW ...')
       setTimeout(function(){
-        exec('sudo -u wattup git pull').code;     
+        exec('sudo -u wattup git pull').code;  
+        exec('sudo cp ~/bts/bts.conf /etc/init/bts.conf').code;
+        exec('sudo cp ~/bts/btsLogrotate /etc/logrotate.d/btsLogrotate').code;
+        exec('sudo logrotate -df /etc/logrotate.d/btsLogrotate').code;
+        exec('sudo initctl reload-configuration ').code;  
       }, 1500);
     }
   ]);

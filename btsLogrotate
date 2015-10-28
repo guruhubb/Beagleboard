@@ -1,9 +1,10 @@
 # need to cp to logrotate location - enter the command below
-# sudo cp ~/code/btsLogrotate /etc/logrotate.d/btsLogrotate
+# sudo cp ~/bts/btsLogrotate /etc/logrotate.d/btsLogrotate
+# sudo logrotate -df /etc/logrotate.d/btsLogrotate
 /var/log/bts.log {
 	weekly
 	rotate 12
-	size 50M
+	size 20M
 	compress
 	delaycompress
 	missingok
