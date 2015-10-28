@@ -10,7 +10,7 @@ process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 var fs = require('fs');
 var logger = require('./logger')
 var path = require('path');
-var exec = require('child_process').exec;
+// var exec = require('child_process').exec;
 var spawn = require('child_process').spawn;
 var child;
 var wget = require('wget-improved');
