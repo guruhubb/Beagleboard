@@ -966,7 +966,8 @@ function upgrade () {
     // console.log("stderr:" + stderr);
     // });
 
-      
+
+
         exec('sudo -u wattup git pull').code;
 
         // var out = fs.openSync('./out.log', 'a');
