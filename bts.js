@@ -966,6 +966,7 @@ function upgrade () {
     // console.log("stderr:" + stderr);
     // });
         exec('git pull').code;
+        
         // var out = fs.openSync('./out.log', 'a');
         // var err = fs.openSync('./out.log', 'a');
         // child = spawn('git',[ 'pull'], { detached: true, stdio: ['ignore', out, err]});      
