@@ -1,6 +1,8 @@
 // bts.js
 // saswata basu, 2015
 // 
+// make sure export PATH=$PATH:~/bts is added to /etc/profile
+// echo "export PATH=$PATH:~/bts" | sudo tee -a /etc/profile
 // get data from sensors and send to cloud
 // control led on/off for sensor(s) - auto shut off after maxLedOn time
 // upgrade, restart, reboot bts code
