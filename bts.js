@@ -775,7 +775,7 @@ function reverse () {
     function(){
       logger.error('Setting up reverseSSH...')
       setTimeout(function(){
-        exec('sudo -u wattup ssh -v -T -N -R 13200:localhost:22 grow@ezgrowr.com &').code;
+        exec('sudo -u wattup ssh -f -v -T -N -R 13200:localhost:22 grow@ezgrowr.com &').code;
         // execute('sshpass -p growr123 ssh -f -N -T -R13200:localhost:22 grow@www.ezgrowr.com', function(callback){
         // // execute('./tunnel.sh', function(callback){
         // //   execute('ssh -v -f -N -T -R13200:localhost:22 grow@www.ezgrowr.com ~/.ssh/id_rsa -o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null -o UserKnownHostsFile=/dev/null', function(callback){
