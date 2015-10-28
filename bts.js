@@ -776,56 +776,6 @@ function reverse () {
       logger.error('Setting up reverseSSH...')
       setTimeout(function(){
         exec('sudo -u wattup ssh -f -v -T -N -R 13200:localhost:22 grow@ezgrowr.com ').code;
-        // execute('sshpass -p growr123 ssh -f -N -T -R13200:localhost:22 grow@www.ezgrowr.com', function(callback){
-        // // execute('./tunnel.sh', function(callback){
-        // //   execute('ssh -v -f -N -T -R13200:localhost:22 grow@www.ezgrowr.com ~/.ssh/id_rsa -o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null -o UserKnownHostsFile=/dev/null', function(callback){
-        //   logger.warn(callback);
-        //   logger.warn("Enter 'ssh -p 13200 wattup@localhost' to access bts");
-        // });
-     
-         // child = spawn('sshpass',[ '-p','growr123','-v','-tt','ssh','-f','-N','-T',
-         //  '-R13200:localhost:22','grow@www.ezgrowr.com','-o','UserKnownHostsFile=/dev/null', 
-         //  '-o','StrictHostKeyChecking=no','-o','GlobalKnownHostsFile=/dev/null'],
-         //  { detached: true, stdio: ['ignore','ignore','ignore']});
-         // child.unref();
-
-
-        // child = spawn('sudo',[ 'ssh','-f','-N','-T','-R13200:localhost:22','grow@www.ezgrowr.com','/home/wattup/.ssh/id_rsa'],
-        //   { detached: true, stdio: ['ignore','ignore','ignore']});
-
-
-         // child = spawn('sshpass',[ '-p','growr123','ssh','-v','-tt','-f','-N','-T',
-         //  '-R13200:localhost:22','grow@www.ezgrowr.com'],{ detached: true, stdio: ['ignore','ignore','ignore']});
-        // Async call to exec()
-        // child = spawn('ssh',['-v','-f','-N','-T','-R13200:localhost:22','grow@ezgrowr.com','~./ssh/id_rsa',
-        //   '-o','UserKnownHostsFile=/dev/null', '-o','StrictHostKeyChecking=no','-o','GlobalKnownHostsFile=/dev/null']);
-        // Async call to exec()
-        // exec('./tunnel.sh &', function(status, output) {
-        //   console.log('Exit status:', status);
-        //   console.log('Program output:', output);
-        // });
-        // run_cmd( "sudo ./tunnel.sh &", function(callback) { 
-          // execute('sudo ./tunnel.sh', function(callback){
-          // execute('ssh -f -N -T tunnel', function(callback){
-          // execute('sudo ssh -f -N -T -R13200:localhost:22 root@www.ezgrowr.com ~./private/privateKey', function(callback){
-            // logger.warn(callback);
-      //       logger.warn("Enter 'ssh -p 13200 wattup@localhost' to access bts");
-      //     // });
-      // Listen for stdout data
-      //   child.stdout.on('data', function (data) {
-      //       logger.info(">>>>>>>>>> Got data from child: " + data);
-      //   });
-      // // Listen for stderr data
-
-      //   child.stderr.on('data',
-      //       function (data) {
-      //           logger.error('>>>>>>>>>> err data: ' + data);
-      //       }
-      //   );
-      //   // Listen for an exit event:
-      //   child.on('exit', function (exitCode) {
-      //       console.warn(">>>>>>>>>> Child exited with code: " + exitCode);
-      //   });
       }, 2500);
     }
   ]);
