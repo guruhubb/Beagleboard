@@ -851,11 +851,11 @@ function upgrade () {
     function(){
       logger.error('Upgrading FW ...')
       setTimeout(function(){
-        exec('sudo -u wattup git pull').code;  
-        exec('sudo cp ~/bts/bts.conf /etc/init/bts.conf').code;
-        exec('sudo cp ~/bts/btsLogrotate /etc/logrotate.d/btsLogrotate').code;
-        exec('sudo logrotate -df /etc/logrotate.d/btsLogrotate').code;
-        exec('sudo initctl reload-configuration ').code;  
+        exec('sudo -u wattup git pull',function(code,output){ logger.error(code);logger.warn(output)};  
+        exec('sudo cp ~/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output)};
+        exec('sudo cp ~/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output)};
+        exec('sudo logrotate -df /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output)};
+        exec('sudo initctl reload-configuration ',function(code,output){ logger.error(code);logger.warn(output)};  
       }, 1500);
     }
   ]);
