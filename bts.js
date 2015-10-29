@@ -851,24 +851,24 @@ function upgrade () {
     function(callback){
       logger.error('Upgrading FW ...')
       setTimeout(function(){
-        exec('sudo -u wattup git pull',function(code,output){ logger.error(code);logger.warn(output);});  
+        exec('sudo -u wattup git pull',function(code,output){ logger.error(code);logger.warn(output);});
+        callback();  
       }, 1000);
-      callback();
     },
     function(callback){
       logger.error('Copying upstart and logrotate conf files ...')
       setTimeout(function(){
         exec('sudo cp home/wattup/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output);});
         exec('sudo cp home/wattup/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});
+        callback();
       }, 2000);
-      callback();
     },
     function(callback){
       logger.error('Reload UpStart ...')
       setTimeout(function(){
         exec('sudo initctl -v reload-configuration ',function(code,output){ logger.error(code);logger.warn(output);});  
+        callback();
       }, 1000);
-      callback();
     },
     function(){
       logger.error('Reload logrotate ...')
