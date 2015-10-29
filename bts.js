@@ -858,8 +858,8 @@ function upgrade () {
     function(callback){
       logger.error('Copying upstart and logrotate conf files ...')
       setTimeout(function(){
-        exec('sudo cp home/wattup/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output);});
-        exec('sudo cp home/wattup/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('sudo cp /home/wattup/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('sudo cp /home/wattup/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});
         callback();
       }, 2000);
     },
