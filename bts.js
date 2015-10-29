@@ -866,7 +866,7 @@ function upgrade () {
     function(callback){
       logger.error('Reload UpStart ...')
       setTimeout(function(){
-        exec('sudo initctl reload-configuration ',function(code,output){ logger.error(code);logger.warn(output);});  
+        exec('sudo initctl -v reload-configuration ',function(code,output){ logger.error(code);logger.warn(output);});  
       }, 1000);
       callback();
     },
