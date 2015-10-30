@@ -777,7 +777,7 @@ function reverse () {
     function(){
       logger.error('Setting up reverseSSH...')
       setTimeout(function(){
-        exec('sudo -u wattup ssh -f -v -T -N -R 13200:localhost:22 grow@ezgrowr.com ').code;
+        exec('sudo -u bts ssh -f -v -T -N -R 13200:localhost:22 grow@ezgrowr.com ').code;
       }, 2500);
     }
   ]);
@@ -851,15 +851,15 @@ function upgrade () {
     function(callback){
       logger.error('Upgrading FW ...')
       setTimeout(function(){
-        exec('sudo -u wattup git pull',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('sudo -u bts git pull',function(code,output){ logger.error(code);logger.warn(output);});
         callback();  
       }, 1000);
     },
     function(callback){
       logger.error('Copying upstart and logrotate conf files ...')
       setTimeout(function(){
-        exec('sudo cp /home/wattup/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output);});
-        exec('sudo cp /home/wattup/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('sudo cp /home/bts/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('sudo cp /home/bts/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});
         callback();
       }, 2000);
     },
@@ -873,7 +873,7 @@ function upgrade () {
     function(){
       logger.error('Reload logrotate ...')
       setTimeout(function(){
-        exec('sudo -u wattup logrotate -df /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});  
+        exec('sudo -u bts logrotate -df /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});  
       }, 1000);
     }
   ]);
