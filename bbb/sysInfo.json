@@ -1,0 +1,6 @@
+{
+   "ts":"Thu Aug 14 18:05:01 UTC 2014",
+   "tse":"1408039501",
+   "txOSStatebash": {
+      "osVersion": "Linux arm 3.8.13-bone59 #1 SMP Sat Jul 5 02:59:43 UTC 2014 armv7l armv7l armv7l GNU/Linux",
+      "rootFSSpaceUsed": "880M",

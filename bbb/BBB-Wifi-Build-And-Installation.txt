@@ -1,0 +1,35 @@
+-----------------------Installation Instructions for Realtek RTL8811AU Drivers-----------------------
+
+This repository is located at: https://github.com/NiceanLoH/beaglebone_black_8812au
+1. The source code for Linux is availbale on the Realtek Website and also here
+2. sudo apt-get install libncurses5-dev gcc make git exuberant-ctags
+2a. Get the Linux Header for this distro sudo apt-get install linux-headers-$(uname -r)
+3. wget https://raw.githubusercontent.com/gkaindl/beaglebone-ubuntu-scripts/master/bb-get-rcn-kernel-source.sh
+4. sudo /bb-get-rcn-kernel-source.sh
+5. cd rtl8812AU_8821AU_linux_v4.2.2_7502.20130517
+6. make CROSS_COMPILE=""
+7. cp 8812au.ko /lib/modules/$(uname -r)
+8. depmod -a
+9. echo "8812au" >> /etc/modules
+10. nano /etc/network/interfaces 
+11. make sure these lines exist:
+
+auto wlan0
+iface wlan0 inet dhcp
+	wpa-ssid "<YOUR_NETWORK_SSID>"
+	wpa-psk  "<YOUR_NETWORK_PASSPHRASE>"
+auto wlan1
+iface wlan1 inet dhcp
+	wpa-ssid "<YOUR_NETWORK_SSID>"
+	wpa-psk  "<YOUR_NETWORK_PASSPHRASE>"
+auto wlan2
+iface wlan2 inet dhcp
+	wpa-ssid "<YOUR_NETWORK_SSID>"
+	wpa-psk  "<YOUR_NETWORK_PASSPHRASE>"
+
+12. Reboot
+13. Initially, the WiFi adaptor should blink slowly, but upon fully booting, 
+should be blinking extremely quickly (faster than the "heartbeat" LED on the Beaglebone). 
+This means the adaptor is connected to a network.
+
+14. Feel free to apt-get purge kernel-tools and destroy the kernel source placed in /usr/src/ .
