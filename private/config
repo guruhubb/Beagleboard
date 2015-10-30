@@ -1,5 +1,5 @@
 # contents of ~/.ssh/config
-# cp ~/code/private/config ~/.ssh/config
+# cp ~/bts/private/config ~/.ssh/config
 
 Host tunnel
     HostName www.ezgrowr.com
@@ -8,11 +8,11 @@ Host tunnel
     LogLevel=error
     UserKnownHostsFile=/dev/null
     StrictHostKeyChecking=no
-    User root
+    User bts
 
 Host cloud
     HostName www.ezgrowr.com
     IdentityFile ~/.ssh/privateKey
     UserKnownHostsFile=/dev/null
     StrictHostKeyChecking=no
-    User root
+    User bts
