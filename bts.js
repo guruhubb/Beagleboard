@@ -44,6 +44,7 @@ var rebootBB = false;
 var reverseSSH = false;
 var closeTunnel = false;
 var maxLedOn = 30; 
+var blinkInterval = 1500;
 var btsID;
 
 // services UUIDs
@@ -152,8 +153,10 @@ ddpclient.on('message', function (msg) {
           restartApp = collection[msgParsed["id"]]["restartApp"];
           reverseSSH = collection[msgParsed["id"]]["reverseSSH"];
           closeTunnel = collection[msgParsed["id"]]["closeTunnel"];
+          blinkInterval = collection[msgParsed["id"]]["blinkInterval"];
           logger.debug('btsSensorListObjects: %j, scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s, \
-            reverseSSH: %s, closeTunnel: %s',btsSensorListObjects,scanTime,upgradeFW,rebootBB,restartApp,reverseSSH,closeTunnel);
+            reverseSSH: %s, closeTunnel: %s, maxLedOn: %s',btsSensorListObjects,scanTime,upgradeFW,rebootBB,restartApp,
+            reverseSSH,closeTunnel,maxLedOn,blinkInterval);
           callback();
         },
         function(callback){
@@ -193,8 +196,10 @@ ddpclient.on('message', function (msg) {
           restartApp = collection[msgParsed["id"]]["restartApp"];
           reverseSSH = collection[msgParsed["id"]]["reverseSSH"];
           closeTunnel = collection[msgParsed["id"]]["closeTunnel"];
+          blinkInterval = collection[msgParsed["id"]]["blinkInterval"];
           logger.debug('btsSensorListObjects: %j, scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s, \
-            reverseSSH: %s, closeTunnel: %s',btsSensorListObjects,scanTime,upgradeFW,rebootBB,restartApp,reverseSSH,closeTunnel);
+            reverseSSH: %s, closeTunnel: %s, maxLedOn: %s',btsSensorListObjects,scanTime,upgradeFW,rebootBB,restartApp,
+            reverseSSH,closeTunnel,maxLedOn,blinkInterval);
           callback();
         },
         function(callback){
@@ -284,8 +289,10 @@ function connect(){
                     stop = Math.floor(Date.now() / 1000);
                     logger.info('\n already scanned : '+ btsSensorListDone);
                     logger.info('scanned:',alreadyScanned);
-                    if (arraysEqual(btsSensorListDone,btsSensorList) || stop-start > scanTime*btsSensorList.length || 
-                      alreadyScanned > scanTime*btsSensorList.length ) {      
+                    var done = arraysEqual(btsSensorListDone,btsSensorList);
+                    if (done || stop-start > scanTime*btsSensorList.length || 
+                      alreadyScanned > scanTime*btsSensorList.length ) {    
+                      if (done) logger.warn("***** All Sensors accounted for *****");  
                       counter =0;
                       alreadyScanned=0;
                       logger.debug("*************** Done Scanning ***************")
@@ -548,7 +555,7 @@ function readWriteToBLE (peripheral,services,characteristics) {
               if (peripheral){
                 peripheral.disconnect();
               }
-            }, 1500);
+            }, blinkInterval);
           } else {
             setTimeout(function(){
               if (peripheral){
