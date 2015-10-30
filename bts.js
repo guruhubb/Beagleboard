@@ -155,7 +155,7 @@ ddpclient.on('message', function (msg) {
           closeTunnel = collection[msgParsed["id"]]["closeTunnel"];
           blinkInterval = collection[msgParsed["id"]]["blinkInterval"];
           logger.debug('btsSensorListObjects: %j, scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s, \
-            reverseSSH: %s, closeTunnel: %s, maxLedOn: %s',btsSensorListObjects,scanTime,upgradeFW,rebootBB,restartApp,
+            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',btsSensorListObjects,scanTime,upgradeFW,rebootBB,restartApp,
             reverseSSH,closeTunnel,maxLedOn,blinkInterval);
           callback();
         },
@@ -198,7 +198,7 @@ ddpclient.on('message', function (msg) {
           closeTunnel = collection[msgParsed["id"]]["closeTunnel"];
           blinkInterval = collection[msgParsed["id"]]["blinkInterval"];
           logger.debug('btsSensorListObjects: %j, scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s, \
-            reverseSSH: %s, closeTunnel: %s, maxLedOn: %s',btsSensorListObjects,scanTime,upgradeFW,rebootBB,restartApp,
+            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',btsSensorListObjects,scanTime,upgradeFW,rebootBB,restartApp,
             reverseSSH,closeTunnel,maxLedOn,blinkInterval);
           callback();
         },
