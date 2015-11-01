@@ -867,9 +867,8 @@ function upgrade () {
       setTimeout(function(){
         exec('sudo cp /home/bts/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output);});
         exec('sudo cp /home/bts/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});
-        exec('cp /home/bts/bts/private/* home/bts/.ssh/',function(code,output){ logger.error(code);logger.warn(output);});
-        exec('cp /home/bts/.ssh/privateKey home/bts/.ssh/id_rsa',function(code,output){ logger.error(code);logger.warn(output);});
-        exec('cp /home/bts/.ssh/publicKey home/bts/.ssh/id_rsa.pub',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('cp /home/bts/bts/private/privateKey /home/bts/.ssh/id_rsa',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('cp /home/bts/bts/private/publicKey /home/bts/.ssh/id_rsa.pub',function(code,output){ logger.error(code);logger.warn(output);});
         callback();
       }, 2000);
     },
@@ -894,6 +893,7 @@ function getSerialNumber() {
   execute('sudo ./btsSerialNumber.sh', function(callback){
     btsID = callback;
     logger.warn('btsID = ',btsID);
+    btsID='4414BBBK0072'
   });
 }
 
