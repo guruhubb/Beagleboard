@@ -137,10 +137,13 @@ var ddpclient = new DDPClient({
 //Log all messages if a "changed" or "added" message is received and then update the sensor lists and parameters
 ddpclient.on('message', function (msg) {
   logger.warn("ddp message: " + msg);
-  msgParsed = ejson.parse(msg);
-  var collection = ddpclient.collections.bts;
-  if(msgParsed["msg"] === "changed"){
+  // msgParsed = ejson.parse(msg);
+  // var collection = ddpclient.collections.bts;
+  if(msg["msg"] === "changed"){
     logger.error("****** changed ******");
+    if(msg["collection"] === "base-stations"){
+      console.log('fields:',msg["fields"]);
+    }
     if(collection[msgParsed["id"]]["btsID"]=== btsID){
       async.series([
         function(callback){
@@ -185,6 +188,7 @@ ddpclient.on('message', function (msg) {
   if (msgParsed["msg"] === "added") {
     logger.error("+++++ added +++++");
     if(collection[msgParsed["id"]]["btsID"]=== btsID){
+      // if(collection[msgParsed["colleciton"]=== btsID){
       async.series([
         function(callback){
           btsSensorListObjects=collection[msgParsed["id"]]["sensorList"];
@@ -721,7 +725,7 @@ function convertSunlightData (data) {
 function convertSoilElectricalConductivityData (data) {
   var rawValue = data.readUInt16LE(0) * 1.0;
   //  convert raw (0 - 1771) to 0 to 10 (mS/cm)
-  var soilElectricalConductivity = rawValue/1000;
+  var soilElectricalConductivity = rawValue/200;
   return soilElectricalConductivity;
 };
 
