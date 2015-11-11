@@ -154,7 +154,7 @@ ddpclient.on('message', function (msg) {
           closeTunnel = bts[msg["id"]]["closeTunnel"];
           blinkInterval = bts[msg["id"]]["blinkInterval"];
           logger.debug('scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
-            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d'scanTime,upgradeFW,
+            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',scanTime,upgradeFW,
             rebootBB,restartApp,reverseSSH,closeTunnel,maxLedOn,blinkInterval);
           callback();
         },
@@ -200,7 +200,7 @@ ddpclient.on('message', function (msg) {
           closeTunnel = bts[msg["id"]]["closeTunnel"];
           blinkInterval = bts[msg["id"]]["blinkInterval"];
           logger.debug('scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
-            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d'scanTime,upgradeFW,
+            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',scanTime,upgradeFW,
             rebootBB,restartApp,reverseSSH,closeTunnel,maxLedOn,blinkInterval);
           callback();
         },
