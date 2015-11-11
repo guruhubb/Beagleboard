@@ -138,6 +138,8 @@ var ddpclient = new DDPClient({
 //Log all messages if a "changed" or "added" message is received and then update the sensor lists and parameters
 ddpclient.on('message', function (msg) {
   logger.warn("ddp message: " + msg);
+  var bts = ddpclient.collections["base-stations"];
+  var sensor = ddpclient.collections.sensors;
   msg = ejson.parse(msg);
   if (msg["msg"] === "changed") {
     logger.error("ooooo changed ooooo");
@@ -191,7 +193,7 @@ ddpclient.on('message', function (msg) {
     if(msg["collection"] === "base-stations"){
       async.series([
         function(callback){
-          maxLedOn = bts[msg["id"]]["maxLedOnTime"]
+          maxLedOn = bts[msg["id"]]["maxLedOnTime"];
           scanTime = bts[msg["id"]]["scanTime"];
           upgradeFW = bts[msg["id"]]["upgradeFW"];
           rebootBB = bts[msg["id"]]["rebootBB"];
