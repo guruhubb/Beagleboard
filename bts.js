@@ -83,7 +83,7 @@ var index = 0;
 var start = Math.floor(Date.now() / 1000);
 var stop;
 
-// var btsID = '2414BBBK2433';  //this should be serial number of bbb
+var btsID = '2414BBBK2433';  //this should be serial number of bbb
 // var sensorID = 'S001';
 
 // run shell command
