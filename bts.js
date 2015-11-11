@@ -33,6 +33,7 @@ require('shelljs/global');
 // initial data without cloud
 var btsSensorList=[];
 var btsSensorListObjects={};
+var sensorIdSerialNo={};
 var sensorObjects={};
 var btsSensorListDone=[];
 var btsSensorListObjectsTimer = {};
@@ -83,7 +84,7 @@ var start = Math.floor(Date.now() / 1000);
 var stop;
 
 // var btsID = '2414BBBK2433';  //this should be serial number of bbb
-
+// var sensorID = 'S001';
 
 // run shell command
 function run_cmd(cmd, args, callBack ) {
@@ -116,8 +117,8 @@ function checkSensorObjectsList () {
 // ddp call
 var ddpclient = new DDPClient({
   host : "ezgrowr.com",
-  port : 443,
-  ssl  : true,
+  port : 3000,  //443
+  ssl  : false, //true
   autoReconnect : true,
   autoReconnectTimer : 500,
   maintainCollections : true,
@@ -137,28 +138,23 @@ var ddpclient = new DDPClient({
 //Log all messages if a "changed" or "added" message is received and then update the sensor lists and parameters
 ddpclient.on('message', function (msg) {
   logger.warn("ddp message: " + msg);
-  // msgParsed = ejson.parse(msg);
-  // var collection = ddpclient.collections.bts;
-  if(msg["msg"] === "changed"){
-    logger.error("****** changed ******");
+  msg = ejson.parse(msg);
+  if (msg["msg"] === "changed") {
+    logger.error("ooooo changed ooooo");
+    console.log("changed");
     if(msg["collection"] === "base-stations"){
-      console.log('fields:',msg["fields"]);
-    }
-    if(collection[msgParsed["id"]]["btsID"]=== btsID){
       async.series([
         function(callback){
-          btsSensorListObjects=collection[msgParsed["id"]]["sensorList"];
-          btsSensorList = Object.keys(btsSensorListObjects);
-          maxLedOn = collection[msgParsed["id"]]["maxLedOn"];
-          scanTime = collection[msgParsed["id"]]["scanTime"];
-          upgradeFW = collection[msgParsed["id"]]["upgradeFW"];
-          rebootBB = collection[msgParsed["id"]]["rebootBB"];
-          restartApp = collection[msgParsed["id"]]["restartApp"];
-          reverseSSH = collection[msgParsed["id"]]["reverseSSH"];
-          closeTunnel = collection[msgParsed["id"]]["closeTunnel"];
-          blinkInterval = collection[msgParsed["id"]]["blinkInterval"];
-          logger.debug('btsSensorListObjects: %j, scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
-            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',btsSensorListObjects,scanTime,upgradeFW,
+          maxLedOn = bts[msg["id"]]["maxLedOnTime"]
+          scanTime = bts[msg["id"]]["scanTime"];
+          upgradeFW = bts[msg["id"]]["upgradeFW"];
+          rebootBB = bts[msg["id"]]["rebootBB"];
+          restartApp = bts[msg["id"]]["restartApp"];
+          reverseSSH = bts[msg["id"]]["reverseSSH"];
+          closeTunnel = bts[msg["id"]]["closeTunnel"];
+          blinkInterval = bts[msg["id"]]["blinkInterval"];
+          logger.debug('scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
+            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d'scanTime,upgradeFW,
             rebootBB,restartApp,reverseSSH,closeTunnel,maxLedOn,blinkInterval);
           callback();
         },
@@ -183,26 +179,28 @@ ddpclient.on('message', function (msg) {
           callback();
         }
       ])
+    }
+    if(msg["collection"] === "sensors"){
+      btsSensorListObjects[sensorIdSerialNo[msg["id"]]]=sensor[msg["id"]]["ledStatus"];
+      logger.debug('btsSensorListObjects:',btsSensorListObjects);
     }
   }
-  if (msgParsed["msg"] === "added") {
+  if (msg["msg"] === "added") {
     logger.error("+++++ added +++++");
-    if(collection[msgParsed["id"]]["btsID"]=== btsID){
-      // if(collection[msgParsed["colleciton"]=== btsID){
+    console.log("added");
+    if(msg["collection"] === "base-stations"){
       async.series([
         function(callback){
-          btsSensorListObjects=collection[msgParsed["id"]]["sensorList"];
-          btsSensorList = Object.keys(btsSensorListObjects);
-          maxLedOn = collection[msgParsed["id"]]["maxLedOn"];
-          scanTime = collection[msgParsed["id"]]["scanTime"];
-          upgradeFW = collection[msgParsed["id"]]["upgradeFW"];
-          rebootBB = collection[msgParsed["id"]]["rebootBB"];
-          restartApp = collection[msgParsed["id"]]["restartApp"];
-          reverseSSH = collection[msgParsed["id"]]["reverseSSH"];
-          closeTunnel = collection[msgParsed["id"]]["closeTunnel"];
-          blinkInterval = collection[msgParsed["id"]]["blinkInterval"];
-          logger.debug('btsSensorListObjects: %j, scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
-            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',btsSensorListObjects,scanTime,upgradeFW,
+          maxLedOn = bts[msg["id"]]["maxLedOnTime"]
+          scanTime = bts[msg["id"]]["scanTime"];
+          upgradeFW = bts[msg["id"]]["upgradeFW"];
+          rebootBB = bts[msg["id"]]["rebootBB"];
+          restartApp = bts[msg["id"]]["restartApp"];
+          reverseSSH = bts[msg["id"]]["reverseSSH"];
+          closeTunnel = bts[msg["id"]]["closeTunnel"];
+          blinkInterval = bts[msg["id"]]["blinkInterval"];
+          logger.debug('scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
+            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d'scanTime,upgradeFW,
             rebootBB,restartApp,reverseSSH,closeTunnel,maxLedOn,blinkInterval);
           callback();
         },
@@ -227,6 +225,25 @@ ddpclient.on('message', function (msg) {
           callback();
         }
       ])
+    }
+    if(msg["collection"] === "sensors"){
+      sensorIdSerialNo[msg["id"]]=sensor[msg["id"]]["serialNo"];
+      btsSensorList.push(sensorIdSerialNo[msg["id"]]);
+      btsSensorListObjects[sensorIdSerialNo[msg["id"]]]=sensor[msg["id"]]["ledStatus"];
+      logger.debug('btsSensorList: ', btsSensorList);
+      logger.debug('btsSensorListObjects:',btsSensorListObjects);
+      logger.debug("sensorIdSerialNo:", sensorIdSerialNo);
+    }
+  }
+  if (msg["msg"] === "removed") {
+    logger.error("------ removed ------");
+    if(msg["collection"] === "sensors"){
+      delete sensorIdSerialNo[msg["id"]];
+      delete btsSensorListObjects[sensorIdSerialNo[msg["id"]]];
+      delete btsSensorList.indexOf(sensorIdSerialNo[msg["id"]]);
+      logger.warn("New btsSensorList:", btsSensorList);
+      logger.warn("New btsSensorListObjects:", btsSensorListObjects);
+      logger.warn("New sensorIdSerialNo:", sensorIdSerialNo);
     }
   }
 });
@@ -250,14 +267,15 @@ function connect(){
           logger.info('Reestablishment of a connection.');
         }
         //Subscribe to a Meteor Collection
+
         ddpclient.subscribe(                 // name of Meteor Publish function to subscribe to
-          'bts',
+          'BaseStationSensors',
           [btsID],                       // any parameters used by the Publish function
           function (error) {             // callback when the subscription is complete
-            if (!error){
-              var collection = ddpclient.collections.bts;
+            if (error){
+              // var collection = ddpclient.collections.bts;
               // logger.debug('bts collection: ', collection);
-            } else {
+            // } else {
               logger.error('Error9 bts collection subscription error: ', error);
             }
           }
@@ -575,38 +593,38 @@ function readWriteToBLE (peripheral,services,characteristics) {
 
 // call cloud to set the sensor config to current state
 function updateSensorConfig(sn,led){
-  data = {btsID:btsID, sn:sn, led:led};
+  // data = {btsID:btsID, sn:sn, led:led};
   ddpclient.call(
-    'updateSensorConfig',            // name of Meteor Method being called
-    [data],                       // parameters to send to Meteor Method
+    'resetSensorLED',            // name of Meteor Method being called
+    [sensorID],                       // parameters to send to Meteor Method
     function (err, result) {      // callback which returns the method call results
-      logger.warn('called updateSensorConfig: ', result);
+      logger.warn('called resetSensorLED: ', result);
       if (err){
         logger.error('Error10 - DDP update Sensor config error: ',err);  
       }
     },
     function () {                 // fires when server has finished
-      logger.debug('updated');  
+      logger.debug('done resetSensorLED');  
       // callback();
     }
   );
 }
-
+  
 // call cloud to set the bts config to current state
 function updateBTSConfig(){
-  data = {rebootBB:rebootBB, restartApp:restartApp, upgradeFW:upgradeFW, reverseSSH:reverseSSH,closeTunnel:closeTunnel
-    , btsID:btsID};
+  // data = {rebootBB:rebootBB, restartApp:restartApp, upgradeFW:upgradeFW, reverseSSH:reverseSSH,closeTunnel:closeTunnel
+  //   , btsID:btsID};
   ddpclient.call(
-    'updateBTSConfig',            // name of Meteor Method being called
-    [data],                       // parameters to send to Meteor Method
+    'resetBTSConfig',            // name of Meteor Method being called
+    [btsID],                       // parameters to send to Meteor Method
     function (err, result) {      // callback which returns the method call results
-      logger.warn('called updateBTSConfig: ', result);
+      logger.warn('called resetBTSConfig: ', result );
       if (err){
         logger.error('Error11 - DDP update BTS config error: ',err);  
       }
     },
     function () {                 // fires when server has finished
-      logger.debug('updated');  
+      logger.debug('done resetBTSConfig');  
       // callback();
     }
   );

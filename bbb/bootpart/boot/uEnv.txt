@@ -1,4 +1,0 @@
-#console=ttyO0,115200n8 quiet drm.debug=7 root=UUID=4c074e4e-40e6-43ad-a0a1-52113ea40176 ro rootfstype=ext4 rootwait fixrtc quiet capemgr.enable_partno=BB-UART2,BB-SPI0
-#console=ttyO0,115200n8 quiet drm.debug=7 root=UUID=4c074e4e-40e6-43ad-a0a1-52113ea40176 ro rootfstype=ext4 rootwait fixrtc quiet capemgr.disable_partno=BB-BONELT-HDMI,BB-BONELT-HDMIN capemgr.enable_partno=BB-UART1,BB-UART2
-console=ttyO0,115200n8 quiet drm.debug=7 root=UUID=4c074e4e-40e6-43ad-a0a1-52113ea40176 ro rootfstype=ext4 rootwait fixrtc quiet capemgr.enable_partno=BB-UART1,BB-UART2
-
