@@ -246,11 +246,11 @@ ddpclient.on('message', function (msg) {
       ])
     }
     if(msg["collection"] === "sensors"){
-      btsSensorList.push(sensorIdSerialNo[msg["id"]]);    
       if (sensor[msg["id"]]["serialNo"]) 
         sensorIdSerialNo[msg["id"]]=sensor[msg["id"]]["serialNo"];
-      if (sensor[msg["id"]]["ledStatus"])
-        btsSensorListObjects[sensorIdSerialNo[msg["id"]]]=sensor[msg["id"]]["ledStatus"];
+        btsSensorList.push(sensorIdSerialNo[msg["id"]]);    
+        if (sensor[msg["id"]]["ledStatus"])
+          btsSensorListObjects[sensorIdSerialNo[msg["id"]]]=sensor[msg["id"]]["ledStatus"];
       logger.debug('btsSensorList: ', btsSensorList);
       logger.debug('btsSensorListObjects:',btsSensorListObjects);
       logger.debug("sensorIdSerialNo:", sensorIdSerialNo);
