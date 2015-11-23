@@ -8,11 +8,11 @@ Host tunnel
     LogLevel=error
     UserKnownHostsFile=/dev/null
     StrictHostKeyChecking=no
-    User bts
+    User growr
 
 Host cloud
     HostName www.ezgrowr.com
     IdentityFile ~/.ssh/privateKey
     UserKnownHostsFile=/dev/null
     StrictHostKeyChecking=no
-    User bts
+    User growr
