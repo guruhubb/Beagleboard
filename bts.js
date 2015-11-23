@@ -463,7 +463,7 @@ function explore(peripheral,callback) {
       logger.debug("connected to ... ",peripheral.uuid);
       if (!peripheral){
         logger.error('Error20 - peripheral error: ',err);
-      }
+      } else {
         peripheral.discoverSomeServicesAndCharacteristics(readServList, readCharList, function(error, services, characteristics){
           if (!error){
             readWriteToBLE(peripheral,services,characteristics);
@@ -472,6 +472,7 @@ function explore(peripheral,callback) {
             peripheral.disconnect();
           }
         });
+      }
     } else { 
       logger.error('Error1 - Sensor connect error: ',err);
       peripheral.disconnect();
@@ -537,7 +538,7 @@ function readWriteToBLE (peripheral,services,characteristics) {
                               data=readBatteryLevel(data);
                               break;
                           case 'led':
-                              data=readLedStatus(data);
+                              // data=readLedStatus(data);
                               if ((characteristicInfo === ledStatusUuid) && btsSensorListObjects[peripheral.uuid]){  // if led is configured to be ON, then turn it ON
                               // logger.error('checking ledStatus');  // led is always off initially because it always goes off upon disconnect
                               // if (btsSensorListObjects[peripheral.uuid]){  //if config list value is true
@@ -547,8 +548,9 @@ function readWriteToBLE (peripheral,services,characteristics) {
                                    logger.error('Error15: write led error'); 
                                   }
                                 });  //todo - error check
-                                data=1;
+                                // data=1;
                               }
+                              data=readLedStatus(data);
                               break;
                           default:
                               logger.error('Error6 - Characteristic not part of list');
