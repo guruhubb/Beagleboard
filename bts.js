@@ -830,7 +830,7 @@ function reverse () {
     function(){
       logger.error('Setting up reverseSSH...')
       setTimeout(function(){
-        exec('sudo -u growr ssh -f -v -T -N -R 13200:localhost:22 grow@ezgrowr.com ',{async:true}).code;
+        exec('sudo -u growr ssh -f -v -T -N -R 13200:localhost:22 grow@ezgrowr.com -o StrictHostKeyChecking=no',{async:true}).code;
       }, 2500);
     }
   ]);
