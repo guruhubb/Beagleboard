@@ -676,6 +676,7 @@ function addPlantData(sensorData,callback){
 // call this function every maxLedOn interval
 function sensorLedOnCheck () {
   var nowTime = Date.now() / 1000 | 0;
+  logger.debug('sensorLedOnCheck')
   for (key in btsSensorListObjects){
     if (btsSensorListObjects[key] === true){
       if(btsSensorListObjectsTimer[key]){  // check if sensor is on timer list
@@ -912,8 +913,8 @@ function upgrade () {
       setTimeout(function(){
         exec('sudo cp /home/growr/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output);});
         exec('sudo cp /home/growr/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});
-        exec('cp /home/growr/bts/private/privateKey /home/bts/.ssh/id_rsa',function(code,output){ logger.error(code);logger.warn(output);});
-        exec('cp /home/growr/bts/private/publicKey /home/bts/.ssh/id_rsa.pub',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('cp /home/growr/bts/private/privateKey /home/growr/.ssh/id_rsa',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('cp /home/growr/bts/private/publicKey /home/growr/.ssh/id_rsa.pub',function(code,output){ logger.error(code);logger.warn(output);});
         callback();
       }, 2000);
     },
