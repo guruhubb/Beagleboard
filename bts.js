@@ -147,14 +147,22 @@ ddpclient.on('message', function (msg) {
     if(msg["collection"] === "base-stations"){
       async.series([
         function(callback){
-          maxLedOn = bts[msg["id"]]["maxLedOnTime"]
-          scanTime = bts[msg["id"]]["scanTime"];
-          upgradeFW = bts[msg["id"]]["upgradeFW"];
-          rebootBB = bts[msg["id"]]["rebootBB"];
-          restartApp = bts[msg["id"]]["restartApp"];
-          reverseSSH = bts[msg["id"]]["reverseSSH"];
-          closeTunnel = bts[msg["id"]]["closeTunnel"];
-          blinkInterval = bts[msg["id"]]["blinkInterval"];
+          if (bts[msg["id"]]["maxLedOnTime"])
+            maxLedOn = bts[msg["id"]]["maxLedOnTime"]
+          if (bts[msg["id"]]["scanTime"])
+            scanTime = bts[msg["id"]]["scanTime"];
+          if (bts[msg["id"]]["upgradeFW"])
+            upgradeFW = bts[msg["id"]]["upgradeFW"];
+          if (bts[msg["id"]]["rebootBB"])
+            rebootBB = bts[msg["id"]]["rebootBB"];
+          if (bts[msg["id"]]["restartApp"])
+            restartApp = bts[msg["id"]]["restartApp"];
+          if (bts[msg["id"]]["reverseSSH"])
+            reverseSSH = bts[msg["id"]]["reverseSSH"];
+          if (bts[msg["id"]]["closeTunnel"])
+            closeTunnel = bts[msg["id"]]["closeTunnel"];
+          if (bts[msg["id"]]["blinkInterval"])
+            blinkInterval = bts[msg["id"]]["blinkInterval"];
           logger.debug('scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
             reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',scanTime,upgradeFW,
             rebootBB,restartApp,reverseSSH,closeTunnel,maxLedOn,blinkInterval);
@@ -183,7 +191,8 @@ ddpclient.on('message', function (msg) {
       ])
     }
     if(msg["collection"] === "sensors"){
-      btsSensorListObjects[sensorIdSerialNo[msg["id"]]]=sensor[msg["id"]]["ledStatus"];
+      if (sensor[msg["id"]]["ledStatus"])
+        btsSensorListObjects[sensorIdSerialNo[msg["id"]]]=sensor[msg["id"]]["ledStatus"];
       logger.debug('btsSensorListObjects:',btsSensorListObjects);
     }
   }
@@ -193,14 +202,22 @@ ddpclient.on('message', function (msg) {
     if(msg["collection"] === "base-stations"){
       async.series([
         function(callback){
-          maxLedOn = bts[msg["id"]]["maxLedOnTime"];
-          scanTime = bts[msg["id"]]["scanTime"];
-          upgradeFW = bts[msg["id"]]["upgradeFW"];
-          rebootBB = bts[msg["id"]]["rebootBB"];
-          restartApp = bts[msg["id"]]["restartApp"];
-          reverseSSH = bts[msg["id"]]["reverseSSH"];
-          closeTunnel = bts[msg["id"]]["closeTunnel"];
-          blinkInterval = bts[msg["id"]]["blinkInterval"];
+          if (bts[msg["id"]]["maxLedOnTime"])
+            maxLedOn = bts[msg["id"]]["maxLedOnTime"]
+          if (bts[msg["id"]]["scanTime"])
+            scanTime = bts[msg["id"]]["scanTime"];
+          if (bts[msg["id"]]["upgradeFW"])
+            upgradeFW = bts[msg["id"]]["upgradeFW"];
+          if (bts[msg["id"]]["rebootBB"])
+            rebootBB = bts[msg["id"]]["rebootBB"];
+          if (bts[msg["id"]]["restartApp"])
+            restartApp = bts[msg["id"]]["restartApp"];
+          if (bts[msg["id"]]["reverseSSH"])
+            reverseSSH = bts[msg["id"]]["reverseSSH"];
+          if (bts[msg["id"]]["closeTunnel"])
+            closeTunnel = bts[msg["id"]]["closeTunnel"];
+          if (bts[msg["id"]]["blinkInterval"])
+            blinkInterval = bts[msg["id"]]["blinkInterval"];
           logger.debug('scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
             reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',scanTime,upgradeFW,
             rebootBB,restartApp,reverseSSH,closeTunnel,maxLedOn,blinkInterval);
@@ -229,9 +246,11 @@ ddpclient.on('message', function (msg) {
       ])
     }
     if(msg["collection"] === "sensors"){
-      sensorIdSerialNo[msg["id"]]=sensor[msg["id"]]["serialNo"];
-      btsSensorList.push(sensorIdSerialNo[msg["id"]]);
-      btsSensorListObjects[sensorIdSerialNo[msg["id"]]]=sensor[msg["id"]]["ledStatus"];
+      btsSensorList.push(sensorIdSerialNo[msg["id"]]);    
+      if (sensor[msg["id"]]["serialNo"]) 
+        sensorIdSerialNo[msg["id"]]=sensor[msg["id"]]["serialNo"];
+      if (sensor[msg["id"]]["ledStatus"])
+        btsSensorListObjects[sensorIdSerialNo[msg["id"]]]=sensor[msg["id"]]["ledStatus"];
       logger.debug('btsSensorList: ', btsSensorList);
       logger.debug('btsSensorListObjects:',btsSensorListObjects);
       logger.debug("sensorIdSerialNo:", sensorIdSerialNo);
@@ -598,7 +617,7 @@ function updateSensorConfig(sn,led){
   // data = {btsID:btsID, sn:sn, led:led};
   ddpclient.call(
     'resetSensorLED',            // name of Meteor Method being called
-    [sensorID],                       // parameters to send to Meteor Method
+    [sn],                       // parameters to send to Meteor Method
     function (err, result) {      // callback which returns the method call results
       logger.warn('called resetSensorLED: ', result);
       if (err){
