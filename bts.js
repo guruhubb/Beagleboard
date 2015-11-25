@@ -260,9 +260,9 @@ ddpclient.on('message', function (msg) {
   if (msg["msg"] === "removed") {
     logger.error("------ removed ------");
     if(msg["collection"] === "sensors"){
-      delete sensorIdSerialNo[msg["id"]];
       delete btsSensorListObjects[sensorIdSerialNo[msg["id"]]];
       delete btsSensorList.indexOf(sensorIdSerialNo[msg["id"]]);
+      delete sensorIdSerialNo[msg["id"]];
       logger.warn("New btsSensorList:", btsSensorList);
       logger.warn("New btsSensorListObjects:", btsSensorListObjects);
       logger.warn("New sensorIdSerialNo:", sensorIdSerialNo);
