@@ -246,7 +246,7 @@ ddpclient.on('message', function (msg) {
       ])
     }
     if(msg["collection"] === "sensors"){
-      if (sensor[msg["id"]]["serialNo"] && (btsSensorList.indexOf(sensor[msg["id"]]["serialNo"]) > -1) ) {   //check if sensor is on list
+      if (sensor[msg["id"]]["serialNo"] && !(btsSensorList.indexOf(sensor[msg["id"]]["serialNo"]) > -1) ) {   //check if sensor is on list
         sensorIdSerialNo[msg["id"]]=sensor[msg["id"]]["serialNo"];
         btsSensorList.push(sensorIdSerialNo[msg["id"]]);    
         if (sensor[msg["id"]]["ledStatus"])
