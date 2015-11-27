@@ -346,10 +346,13 @@ function connect(){
                       var index = 0;
                       var length = Object.keys(sensorObjects).length;
                       async.during(
-                        function () {
-                          logger.debug("index is: ",index, " number of sensors: ",length);
-                          return (index < length);  
+                        function (callback) {
+                          return callback(null, index < length);
                         },
+                        // function () {
+                        //   logger.debug("index is: ",index, " number of sensors: ",length);
+                        //   return (index < length);  
+                        // },
                         function(callback) {
                           async.series([
                             function(callback) { 
