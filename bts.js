@@ -345,67 +345,68 @@ function connect(){
                       var keys = Object.keys(sensorObjects);
                       var index = 0;
                       var length = Object.keys(sensorObjects).length;
-                      async.forEach(keys, function(item,callback){
-                          console.log(item); // print the key
-                          // callback(); // tell async that the iterator has completed
-                          // function(callback) {
-                            async.series([
-                              function(callback) { 
-                                logger.warn('exploring...',keys[index]);
-                                explore(sensorObjects[keys[index]],callback);
-                              },
-                              function(callback) {
-                                index++;
-                                // if list is done exploring
-                                if (index > length-1  ){
-                                    async.series ([
-                                      function(callback){
-                                        // check if Led is ON
-                                        sensorLedOnCheck();
-                                        logger.warn('check if Led is ON:',index);
-                                        callback();
-                                      },
-                                      function(callback){
-                                        // check if sensor has been removed by cloud
-                                        checkSensorObjectsList();
-                                        length = Object.keys(sensorObjects).length;
-                                        keys = Object.keys(sensorObjects);
-                                        logger.warn('checkSensorObjectsList:',length);
-                                        callback();
-                                      }, 
-                                      function(callback){
-                                        // check if list is complete or any sensor additions from cloud
-                                        if (!arraysEqual(btsSensorListDone,btsSensorList)) {
-                                          logger.info('scanning again ...')
-                                          start = Math.floor(Date.now() / 1000);
-                                          //scan again if we are missing some sensors on the list
-                                          setTimeout(function(){
-                                              exploreOn = true;
-                                              noble.startScanning(readServList);
-                                              callback();
-                                          }, 500);
-                                        } else {
-                                          index = 0;
-                                          callback();
-                                        }
-                                        logger.warn('index is:',index);
-                                        // callback();
-                                      }, function(){
+                      async.whilst(
+                        function () {
+                          logger.debug("index is: ",index, " number of sensors: ",length);
+                          return (index < length);  
+                        },
+                        function(callback) {
+                          async.series([
+                            function(callback) { 
+                              logger.warn('exploring...',keys[index]);
+                              explore(sensorObjects[keys[index]],callback);
+                            },
+                            function(callback) {
+                              index++;
+                              // if list is done exploring
+                              if (index > length-1  ){
+                                  async.series ([
+                                    function(callback){
+                                      // check if Led is ON
+                                      sensorLedOnCheck();
+                                      logger.warn('check if Led is ON:',index);
+                                      callback();
+                                    },
+                                    function(callback){
+                                      // check if sensor has been removed by cloud
+                                      checkSensorObjectsList();
+                                      length = Object.keys(sensorObjects).length;
+                                      keys = Object.keys(sensorObjects);
+                                      logger.warn('checkSensorObjectsList:',length);
+                                      callback();
+                                    }, 
+                                    function(callback){
+                                      // check if list is complete or any sensor additions from cloud
+                                      if (!arraysEqual(btsSensorListDone,btsSensorList)) {
+                                        logger.info('scanning again ...')
+                                        start = Math.floor(Date.now() / 1000);
+                                        //scan again if we are missing some sensors on the list
+                                        setTimeout(function(){
+                                            exploreOn = true;
+                                            noble.startScanning(readServList);
+                                            callback();
+                                        }, 500);
+                                      } else {
+                                        index = 0;
                                         callback();
                                       }
-                                    ])
-                                } else {
-                                    callback();
-                                }
-                              }, 
-                              function(){
-                                callback();
+                                      logger.warn('index is:',index);
+                                      // callback();
+                                    }, function(){
+                                      callback();
+                                    }
+                                  ])
+                              } else {
+                                  callback();
                               }
-                            ]);
-                          // },
-                          // function() {
-                          //   logger.info('++++++++ Done exploring all sensors on list ++++++++');
-                          // }
+                            }, 
+                            function(){
+                              callback();
+                            }
+                          ]);
+                        },
+                        function() {
+                          logger.info('++++++++ Done exploring all sensors on list ++++++++');
                         }
                       );
                     } else {
