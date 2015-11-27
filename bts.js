@@ -345,7 +345,7 @@ function connect(){
                       var keys = Object.keys(sensorObjects);
                       var index = 0;
                       var length = Object.keys(sensorObjects).length;
-                      async.whilst(
+                      async.during(
                         function () {
                           logger.debug("index is: ",index, " number of sensors: ",length);
                           return (index < length);  
