@@ -345,10 +345,17 @@ function connect(){
                       var keys = Object.keys(sensorObjects);
                       var index = 0;
                       var length = Object.keys(sensorObjects).length;
-                      async.during(
-                        function (callback) {
-                          return callback(null, index < length);
-                        },
+                      async.forEach(keys, 
+                          // console.log(item); // print the key
+                          // callback(); // tell async that the iterator has completed
+
+                        // }, function(err) {
+                        //     console.log('iterating done');
+                        // });  
+                        // async.during(
+                        //   function (callback) {
+                        //     return callback(null, index < length);
+                        //   },
                         // function () {
                         //   logger.debug("index is: ",index, " number of sensors: ",length);
                         //   return (index < length);  
