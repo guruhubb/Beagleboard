@@ -82,8 +82,8 @@ var alreadyScanned=0;
 var index = 0;
 var start = Math.floor(Date.now() / 1000);
 var stop;
-
-var btsID = '4414BBBK0072';  //this should be serial number of bbb
+var btsID;
+// var btsID = '4414BBBK0072';  //this should be serial number of bbb
 // var sensorID = 'S001';
 
 // run shell command
@@ -941,7 +941,7 @@ function getSerialNumber() {
   execute('sudo ./btsSerialNumber.sh', function(callback){
     btsID = callback;
     logger.warn('btsID = ',btsID);
-    btsID='4414BBBK0072'
+    // btsID='4414BBBK0072'
   });
 }
 
