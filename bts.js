@@ -357,7 +357,8 @@ function connect(){
                             function(callback) { 
                               logger.warn('exploring...',keys[index]);
                               timelapsed = (new Date).getTime()/1000 - timeIn;
-                              if (timelapsed > (index+1)*60)
+                              timeIn = (new Date).getTime()/1000;
+                              if (timelapsed > 60)
                                 explore(sensorObjects[keys[index]],callback);
                               else {
                                 logger.info('timeout for 60s...')
@@ -397,6 +398,7 @@ function connect(){
                                             callback();
                                         }, 500);
                                       } else {
+                                        logger.info('reset index to 0 ...');
                                         index = 0;
                                         callback();
                                       }
