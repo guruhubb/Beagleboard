@@ -360,9 +360,10 @@ function connect(){
                               if (timelapsed > (index+1)*60)
                                 explore(sensorObjects[keys[index]],callback);
                               else {
+                                logger.info('timeout for 60s...')
                                 setTimeout(function(){
                                             explore(sensorObjects[keys[index]],callback);
-                                        }, 60);
+                                        }, 60000);
                               }
                             },
                             function(callback) {
