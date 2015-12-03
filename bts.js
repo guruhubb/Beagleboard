@@ -345,6 +345,8 @@ function connect(){
                       var keys = Object.keys(sensorObjects);
                       var index = 0;
                       var length = Object.keys(sensorObjects).length;
+                      var timeIn = (new Date).getTime()/1000;
+                      var timelapsed 
                       async.whilst(
                         function () {
                           logger.debug("index is: ",index, " number of sensors: ",length);
@@ -354,7 +356,14 @@ function connect(){
                           async.series([
                             function(callback) { 
                               logger.warn('exploring...',keys[index]);
-                              explore(sensorObjects[keys[index]],callback);
+                              timelapsed = (new Date).getTime()/1000 - timeIn;
+                              if (timelapsed > (index+1)*60)
+                                explore(sensorObjects[keys[index]],callback);
+                              else {
+                                setTimeout(function(){
+                                            explore(sensorObjects[keys[index]],callback);
+                                        }, 60);
+                              }
                             },
                             function(callback) {
                               index++;
