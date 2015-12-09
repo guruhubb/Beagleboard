@@ -46,6 +46,7 @@ var reverseSSH = false;
 var closeTunnel = false;
 var maxLedOn = 30; 
 var blinkInterval = 1500;
+var minReadInterval = 1000;
 var btsID;
 
 // services UUIDs
@@ -151,6 +152,8 @@ ddpclient.on('message', function (msg) {
             maxLedOn = bts[msg["id"]]["maxLedOnTime"]
           if (bts[msg["id"]]["scanTime"])
             scanTime = bts[msg["id"]]["scanTime"];
+          if (bts[msg["id"]]["minReadInterval"])
+            scanTime = bts[msg["id"]]["minReadInterval"];
           if (bts[msg["id"]]["upgradeFW"])
             upgradeFW = bts[msg["id"]]["upgradeFW"];
           if (bts[msg["id"]]["rebootBB"])
@@ -163,8 +166,8 @@ ddpclient.on('message', function (msg) {
             closeTunnel = bts[msg["id"]]["closeTunnel"];
           if (bts[msg["id"]]["blinkInterval"])
             blinkInterval = bts[msg["id"]]["blinkInterval"];
-          logger.debug('scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
-            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',scanTime,upgradeFW,
+          logger.debug('scanTime: %d, minReadInterval: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
+            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',scanTime, minReadInterval, upgradeFW,
             rebootBB,restartApp,reverseSSH,closeTunnel,maxLedOn,blinkInterval);
           callback();
         },
@@ -206,6 +209,8 @@ ddpclient.on('message', function (msg) {
             maxLedOn = bts[msg["id"]]["maxLedOnTime"]
           if (bts[msg["id"]]["scanTime"])
             scanTime = bts[msg["id"]]["scanTime"];
+          if (bts[msg["id"]]["minReadInterval"])
+            scanTime = bts[msg["id"]]["minReadInterval"];
           if (bts[msg["id"]]["upgradeFW"])
             upgradeFW = bts[msg["id"]]["upgradeFW"];
           if (bts[msg["id"]]["rebootBB"])
@@ -218,8 +223,8 @@ ddpclient.on('message', function (msg) {
             closeTunnel = bts[msg["id"]]["closeTunnel"];
           if (bts[msg["id"]]["blinkInterval"])
             blinkInterval = bts[msg["id"]]["blinkInterval"];
-          logger.debug('scanTime: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
-            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',scanTime,upgradeFW,
+          logger.debug('scanTime: %d, minReadInterval: %d, upgradeFW: %s, rebootBB: %s, restartApp: %s,\
+            reverseSSH: %s, closeTunnel: %s, maxLedOn: %d, blinkInterval: %d',scanTime, minReadInterval, upgradeFW,
             rebootBB,restartApp,reverseSSH,closeTunnel,maxLedOn,blinkInterval);
           callback();
         },
@@ -364,7 +369,7 @@ function connect(){
                                 logger.info('timeout for 60s...')
                                 setTimeout(function(){
                                             explore(sensorObjects[keys[index]],callback);
-                                        }, 60000);
+                                        }, 1000*minReadInterval);
                               }
                             },
                             function(callback) {
