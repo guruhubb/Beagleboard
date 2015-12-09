@@ -46,7 +46,7 @@ var reverseSSH = false;
 var closeTunnel = false;
 var maxLedOn = 30; 
 var blinkInterval = 1500;
-var minReadInterval = 1000;
+var minReadInterval = 60;
 var btsID;
 
 // services UUIDs
