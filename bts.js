@@ -350,82 +350,92 @@ function connect(){
                       var keys = Object.keys(sensorObjects);
                       var index = 0;
                       var length = Object.keys(sensorObjects).length;
-                      var timeIn = (new Date).getTime()/1000;
-                      var timelapsed 
-                      async.whilst(
-                        function () {
-                          logger.debug("index is: ",index, " number of sensors: ",length);
-                          return (index < length);  
-                        },
-                        function(callback) {
-                          async.series([
-                            function(callback) { 
-                              logger.warn('exploring...',keys[index]);
-                              timelapsed = (new Date).getTime()/1000 - timeIn;
-                              timeIn = (new Date).getTime()/1000;
-                              if (timelapsed > 60)
-                                explore(sensorObjects[keys[index]],callback);
-                              else {
-                                logger.info('timeout for 60s...')
-                                setTimeout(function(){
-                                            explore(sensorObjects[keys[index]],callback);
-                                        }, 1000*minReadInterval);
-                              }
-                            },
-                            function(callback) {
-                              index++;
-                              // if list is done exploring
-                              if (index > length-1  ){
-                                  async.series ([
-                                    function(callback){
-                                      // check if Led is ON
-                                      sensorLedOnCheck();
-                                      logger.warn('check if Led is ON:',index);
-                                      callback();
-                                    },
-                                    function(callback){
-                                      // check if sensor has been removed by cloud
-                                      checkSensorObjectsList();
-                                      length = Object.keys(sensorObjects).length;
-                                      keys = Object.keys(sensorObjects);
-                                      logger.warn('checkSensorObjectsList:',length);
-                                      callback();
-                                    }, 
-                                    function(callback){
-                                      // check if list is complete or any sensor additions from cloud
-                                      if (!arraysEqual(btsSensorListDone,btsSensorList)) {
-                                        logger.info('scanning again ...')
-                                        start = Math.floor(Date.now() / 1000);
-                                        //scan again if we are missing some sensors on the list
-                                        setTimeout(function(){
-                                            exploreOn = true;
-                                            noble.startScanning(readServList);
-                                            callback();
-                                        }, 500);
-                                      } else {
-                                        logger.info('reset index to 0 ...');
-                                        index = 0;
-                                        callback();
-                                      }
-                                      logger.warn('index is:',index);
-                                      // callback();
-                                    }, function(){
-                                      callback();
-                                    }
-                                  ])
-                              } else {
-                                  callback();
-                              }
-                            }, 
-                            function(){
-                              callback();
-                            }
-                          ]);
-                        },
-                        function() {
-                          logger.info('++++++++ Done exploring all sensors on list ++++++++');
-                        }
-                      );
+                      var timeIn;
+                      var timelapsed;
+                      timelapsed = (new Date).getTime()/1000 - timeIn;
+                      if (timelapsed > 60)
+                          explore(sensorObjects[keys[index]],callback);
+                      else {
+                          logger.info('timeout for 60s...')
+                          setTimeout(function(){
+                              explore(sensorObjects[keys[index]],callback);
+                          }, 1000*minReadInterval);
+                      }
+                      timeIn = (new Date).getTime()/1000;
+                      // async.whilst(
+                      //   function () {
+                      //     logger.debug("index is: ",index, " number of sensors: ",length);
+                      //     return (index < length);  
+                      //   },
+                      //   function(callback) {
+                      //     async.series([
+                      //       function(callback) { 
+                      //         logger.warn('exploring...',keys[index]);
+                      //         timelapsed = (new Date).getTime()/1000 - timeIn;
+                      //         timeIn = (new Date).getTime()/1000;
+                      //         if (timelapsed > 60)
+                      //           explore(sensorObjects[keys[index]],callback);
+                      //         else {
+                      //           logger.info('timeout for 60s...')
+                      //           setTimeout(function(){
+                      //                       explore(sensorObjects[keys[index]],callback);
+                      //                   }, 1000*minReadInterval);
+                      //         }
+                      //       },
+                      //       function(callback) {
+                      //         index++;
+                      //         // if list is done exploring
+                      //         if (index > length-1  ){
+                      //             async.series ([
+                      //               function(callback){
+                      //                 // check if Led is ON
+                      //                 sensorLedOnCheck();
+                      //                 logger.warn('check if Led is ON:',index);
+                      //                 callback();
+                      //               },
+                      //               function(callback){
+                      //                 // check if sensor has been removed by cloud
+                      //                 checkSensorObjectsList();
+                      //                 length = Object.keys(sensorObjects).length;
+                      //                 keys = Object.keys(sensorObjects);
+                      //                 logger.warn('checkSensorObjectsList:',length);
+                      //                 callback();
+                      //               }, 
+                      //               function(callback){
+                      //                 // check if list is complete or any sensor additions from cloud
+                      //                 if (!arraysEqual(btsSensorListDone,btsSensorList)) {
+                      //                   logger.info('scanning again ...')
+                      //                   start = Math.floor(Date.now() / 1000);
+                      //                   //scan again if we are missing some sensors on the list
+                      //                   setTimeout(function(){
+                      //                       exploreOn = true;
+                      //                       noble.startScanning(readServList);
+                      //                       callback();
+                      //                   }, 500);
+                      //                 } else {
+                      //                   logger.info('reset index to 0 ...');
+                      //                   index = 0;
+                      //                   callback();
+                      //                 }
+                      //                 logger.warn('index is:',index);
+                      //                 // callback();
+                      //               }, function(){
+                      //                 callback();
+                      //               }
+                      //             ])
+                      //         } else {
+                      //             callback();
+                      //         }
+                      //       }, 
+                      //       function(){
+                      //         callback();
+                      //       }
+                      //     ]);
+                      //   },
+                      //   function() {
+                      //     logger.info('++++++++ Done exploring all sensors on list ++++++++');
+                      //   }
+                      // );
                     } else {
                       exploreOn = true;
                       noble.startScanning(readServList);
@@ -449,6 +459,82 @@ function connect(){
   ])
 }
 
+function exploreAllSensors (){
+  async.whilst(
+    function () {
+      logger.debug("index is: ",index, " number of sensors: ",length);
+      return (index < length);  
+    },
+    function(callback) {
+      async.series([
+        function(callback) { 
+          logger.warn('exploring...',keys[index]);
+          timelapsed = (new Date).getTime()/1000 - timeIn;
+          timeIn = (new Date).getTime()/1000;
+          if (timelapsed > 60)
+            explore(sensorObjects[keys[index]],callback);
+          else {
+            logger.info('timeout for 60s...')
+            setTimeout(function(){
+                        explore(sensorObjects[keys[index]],callback);
+                    }, 1000*minReadInterval);
+          }
+        },
+        function(callback) {
+          index++;
+          // if list is done exploring
+          if (index > length-1  ){
+              async.series ([
+                function(callback){
+                  // check if Led is ON
+                  sensorLedOnCheck();
+                  logger.warn('check if Led is ON:',index);
+                  callback();
+                },
+                function(callback){
+                  // check if sensor has been removed by cloud
+                  checkSensorObjectsList();
+                  length = Object.keys(sensorObjects).length;
+                  keys = Object.keys(sensorObjects);
+                  logger.warn('checkSensorObjectsList:',length);
+                  callback();
+                }, 
+                function(callback){
+                  // check if list is complete or any sensor additions from cloud
+                  if (!arraysEqual(btsSensorListDone,btsSensorList)) {
+                    logger.info('scanning again ...')
+                    start = Math.floor(Date.now() / 1000);
+                    //scan again if we are missing some sensors on the list
+                    setTimeout(function(){
+                        exploreOn = true;
+                        noble.startScanning(readServList);
+                        callback();
+                    }, 500);
+                  } else {
+                    logger.info('reset index to 0 ...');
+                    index = 0;
+                    callback();
+                  }
+                  logger.warn('index is:',index);
+                  // callback();
+                }, function(){
+                  callback();
+                }
+              ])
+          } else {
+              callback();
+          }
+        }, 
+        function(){
+          callback();
+        }
+      ]);
+    },
+    function() {
+      logger.info('++++++++ Done exploring all sensors on list ++++++++');
+    }
+  );
+}
 
 // if app is powered on start scanning, else exit app
 noble.on('stateChange', function(state) {
