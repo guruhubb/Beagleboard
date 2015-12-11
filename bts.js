@@ -347,9 +347,7 @@ function connect(){
                       alreadyScanned=0;
                       logger.debug("*************** Done Scanning ***************")
                       logger.debug("Scan time was ",stop-start,' seconds');
-                      var keys = Object.keys(sensorObjects);
-                      var index = 0;
-                      var length = Object.keys(sensorObjects).length;
+
                       var timeIn =0;
                       var timelapsed;
                       timelapsed = (new Date).getTime()/1000 - timeIn;
@@ -362,7 +360,7 @@ function connect(){
                           }, 1000*minReadInterval);
                       }
                       timeIn = (new Date).getTime()/1000;
-                      exploreAllSensors()
+                      // exploreAllSensors()
                       // async.whilst(
                       //   function () {
                       //     logger.debug("index is: ",index, " number of sensors: ",length);
@@ -461,6 +459,9 @@ function connect(){
 }
 
 function exploreAllSensors (){
+  var keys = Object.keys(sensorObjects);
+  var index = 0;
+  var length = Object.keys(sensorObjects).length;
   async.whilst(
     function () {
       logger.debug("index is: ",index, " number of sensors: ",length);
