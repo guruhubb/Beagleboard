@@ -48,6 +48,8 @@ var maxLedOn = 30;
 var blinkInterval = 1500;
 var minReadInterval = 60;
 var btsID;
+var timeIn;
+var timelapsed;
 
 // services UUIDs
 var serviceSensorUuid = '39e1fa0084a811e2afba000win2a5d5c51b'
@@ -348,9 +350,8 @@ function connect(){
                       logger.debug("*************** Done Scanning ***************")
                       logger.debug("Scan time was ",stop-start,' seconds');
 
-                      var timeIn =0;
-                      var timelapsed;
                       timelapsed = (new Date).getTime()/1000 - timeIn;
+                      logger.info('timelapsed is ',timelapsed)
                       if (timelapsed > 60)
                           exploreAllSensors();
                       else {
