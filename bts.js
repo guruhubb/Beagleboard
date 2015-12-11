@@ -350,18 +350,19 @@ function connect(){
                       var keys = Object.keys(sensorObjects);
                       var index = 0;
                       var length = Object.keys(sensorObjects).length;
-                      var timeIn;
+                      var timeIn =0;
                       var timelapsed;
                       timelapsed = (new Date).getTime()/1000 - timeIn;
                       if (timelapsed > 60)
-                          explore(sensorObjects[keys[index]],callback);
+                          exploreAllSensors();
                       else {
                           logger.info('timeout for 60s...')
                           setTimeout(function(){
-                              explore(sensorObjects[keys[index]],callback);
+                              exploreAllSensors();
                           }, 1000*minReadInterval);
                       }
                       timeIn = (new Date).getTime()/1000;
+                      exploreAllSensors()
                       // async.whilst(
                       //   function () {
                       //     logger.debug("index is: ",index, " number of sensors: ",length);
@@ -469,16 +470,16 @@ function exploreAllSensors (){
       async.series([
         function(callback) { 
           logger.warn('exploring...',keys[index]);
-          timelapsed = (new Date).getTime()/1000 - timeIn;
-          timeIn = (new Date).getTime()/1000;
-          if (timelapsed > 60)
+          // timelapsed = (new Date).getTime()/1000 - timeIn;
+          // timeIn = (new Date).getTime()/1000;
+          // if (timelapsed > 60)
             explore(sensorObjects[keys[index]],callback);
-          else {
-            logger.info('timeout for 60s...')
-            setTimeout(function(){
-                        explore(sensorObjects[keys[index]],callback);
-                    }, 1000*minReadInterval);
-          }
+          // else {
+          //   logger.info('timeout for 60s...')
+          //   setTimeout(function(){
+          //               explore(sensorObjects[keys[index]],callback);
+          //           }, 1000*minReadInterval);
+          // }
         },
         function(callback) {
           index++;
