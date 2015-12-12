@@ -46,7 +46,7 @@ var reverseSSH = false;
 var closeTunnel = false;
 var maxLedOn = 30; 
 var blinkInterval = 1500;
-var minReadInterval = 20;
+var minReadInterval = 1;
 var btsID;
 var timeIn = (new Date).getTime()/1000 -61;
 var timelapsed;
