@@ -350,17 +350,17 @@ function connect(){
                       logger.debug("*************** Done Scanning ***************")
                       logger.debug("Scan time was ",stop-start,' seconds');
 
-                      timelapsed = (new Date).getTime()/1000 - timeIn;
-                      logger.info('timelapsed is ',timelapsed)
-                      if (timelapsed > 60)
+                      // timelapsed = (new Date).getTime()/1000 - timeIn;
+                      // logger.info('timelapsed is ',timelapsed)
+                      // if (timelapsed > 60)
                           exploreAllSensors();
-                      else {
-                          logger.info('timeout for 60s...')
-                          setTimeout(function(){
-                              exploreAllSensors();
-                          }, 1000*minReadInterval);
-                      }
-                      timeIn = (new Date).getTime()/1000;
+                      // else {
+                      //     logger.info('timeout for 60s...')
+                      //     setTimeout(function(){
+                      //         exploreAllSensors();
+                      //     }, 1000*minReadInterval);
+                      // }
+                      // timeIn = (new Date).getTime()/1000;
                       // exploreAllSensors()
                       // async.whilst(
                       //   function () {
@@ -472,16 +472,17 @@ function exploreAllSensors (){
       async.series([
         function(callback) { 
           logger.warn('exploring...',keys[index]);
-          // timelapsed = (new Date).getTime()/1000 - timeIn;
-          // timeIn = (new Date).getTime()/1000;
-          // if (timelapsed > 60)
+          timelapsed = (new Date).getTime()/1000 - timeIn;
+          logger.info('timelapsed is ',timelapsed);
+          timeIn = (new Date).getTime()/1000;
+          if (timelapsed > minReadInterval)
             explore(sensorObjects[keys[index]],callback);
-          // else {
-          //   logger.info('timeout for 60s...')
-          //   setTimeout(function(){
-          //               explore(sensorObjects[keys[index]],callback);
-          //           }, 1000*minReadInterval);
-          // }
+          else {
+            logger.info('timeout for minReadInterval ...')
+            setTimeout(function(){
+                        explore(sensorObjects[keys[index]],callback);
+                    }, 1000*minReadInterval);
+          }
         },
         function(callback) {
           index++;
