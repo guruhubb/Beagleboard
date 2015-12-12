@@ -869,8 +869,8 @@ function readLedStatus (data) {
 
 function convertSunlightData (data) {
   var rawValue = data.readUInt16LE(0) * 1.0;
-  // var sunlight = 0.08640000000000001 * (192773.17000000001 * Math.pow(rawValue, -1.0606619));
-  var sunlight = 11.574 * rawValue
+  var sunlight = 0.08640000000000001 * (192773.17000000001 * Math.pow(rawValue, -1.0606619));
+  // var sunlight = 11.574 * rawValue
   return sunlight;
 };
 
