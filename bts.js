@@ -651,7 +651,7 @@ function readWriteToBLE (peripheral,services,characteristics) {
                               if ((characteristicInfo === ledStatusUuid) && btsSensorListObjects[peripheral.uuid]){  // if led is configured to be ON, then turn it ON
                               // logger.error('checking ledStatus');  // led is always off initially because it always goes off upon disconnect
                               // if (btsSensorListObjects[peripheral.uuid]){  //if config list value is true
-                                logger.info('turning on LED');
+                                logger.error('********  turning on LED LED LED ********');
                                 characteristic.write(new Buffer([0x01]), false, function(err){
                                   if(err){
                                    logger.error('Error15: write led error'); 
