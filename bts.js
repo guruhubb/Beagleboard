@@ -89,6 +89,7 @@ var btsID;
 // var btsID = '4414BBBK0072';  //this should be serial number of bbb
 // var sensorID = 'S001';
 
+
 // run shell command
 function run_cmd(cmd, args, callBack ) {
     var spawn = require('child_process').spawn;
