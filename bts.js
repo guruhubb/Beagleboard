@@ -46,7 +46,7 @@ var reverseSSH = false;
 var closeTunnel = false;
 var maxLedOn = 30; 
 var blinkInterval = 1500;
-var minReadInterval = 1;
+var minReadInterval = 60;
 var btsID;
 var timeIn = (new Date).getTime()/1000 -61;
 var timelapsed;
@@ -475,7 +475,7 @@ function exploreAllSensors (){
           timelapsed = (new Date).getTime()/1000 - timeIn;
           logger.info('timelapsed is ',timelapsed);
           timeIn = (new Date).getTime()/1000;
-          if (timelapsed > minReadInterval || index == 0)
+          if (timelapsed > minReadInterval || index != 0)
             explore(sensorObjects[keys[index]],callback);
           else {
             logger.info('timeout for minReadInterval ...')
