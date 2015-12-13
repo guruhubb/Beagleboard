@@ -475,13 +475,13 @@ function exploreAllSensors (){
           timelapsed = (new Date).getTime()/1000 - timeIn;
           logger.info('timelapsed is ',timelapsed);
           timeIn = (new Date).getTime()/1000;
-          if (timelapsed > minReadInterval)
+          if (timelapsed > minReadInterval || index == 0)
             explore(sensorObjects[keys[index]],callback);
           else {
             logger.info('timeout for minReadInterval ...')
             setTimeout(function(){
                         explore(sensorObjects[keys[index]],callback);
-                    }, 1000*minReadInterval);
+                    }, 1000*(minReadInterval-timelapsed));
           }
         },
         function(callback) {
@@ -789,7 +789,7 @@ function sensorLedOnCheck () {
   for (key in btsSensorListObjects){
     if (btsSensorListObjects[key] === true){
       if(btsSensorListObjectsTimer[key]){  // check if sensor is on timer list
-        if ( (nowTime-btsSensorListObjectsTimer[key]) > maxLedOn){
+        if ( (nowTime-btsSensorListObjectsTimer[key]) > maxLedOn + minReadInterval){
           btsSensorListObjects[key] = false;
           delete btsSensorListObjectsTimer[key];  //remove sensor from timer list if led is reset
           //call method to update sensor config in cloud
