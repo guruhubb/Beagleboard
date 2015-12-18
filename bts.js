@@ -104,7 +104,7 @@ function run_cmd(cmd, args, callBack ) {
 function checkSensorObjectsList () {
   var sensorObjectsKeys = Object.keys(sensorObjects);
   for (key in sensorObjects){
-    if(!(btsSensorList.indexOf(key) > -1)){    // delete sensor from sensorObjects & btsSensorListDone
+    if(!(btsSensorList.toLowerCase().indexOf(key) > -1)){    // delete sensor from sensorObjects & btsSensorListDone
       logger.warn('deleting sensor from sensorObjects...') ;
       delete sensorObjects[key]; 
       logger.warn('btsSensorList:',btsSensorList);
@@ -254,9 +254,9 @@ ddpclient.on('message', function (msg) {
       ])
     }
     if(msg["collection"] === "sensors"){
-      if (sensor[msg["id"]]["serialNo"] && !(btsSensorList.indexOf(sensor[msg["id"]]["serialNo"]) > -1) ) {   //check if sensor is on list
+      if (sensor[msg["id"]]["serialNo"] && !(btsSensorList.toLowerCase().indexOf(sensor[msg["id"]]["serialNo"]) > -1) ) {   //check if sensor is on list
         sensorIdSerialNo[msg["id"]]=sensor[msg["id"]]["serialNo"];
-        btsSensorList.push(sensorIdSerialNo[msg["id"]].toLowerCase());    
+        btsSensorList.push(sensorIdSerialNo[msg["id"]]);    
         if (sensor[msg["id"]]["ledStatus"])
           btsSensorListObjects[sensorIdSerialNo[msg["id"]]]=sensor[msg["id"]]["ledStatus"];
       }
@@ -269,7 +269,7 @@ ddpclient.on('message', function (msg) {
     logger.error("------ removed ------");
     if(msg["collection"] === "sensors"){
       delete btsSensorListObjects[sensorIdSerialNo[msg["id"]]];
-      index = btsSensorList.indexOf(sensorIdSerialNo[msg["id"]]);
+      index = btsSensorList.toLowerCase().indexOf(sensorIdSerialNo[msg["id"]]);
       delete sensorIdSerialNo[msg["id"]];
       if (index>-1) btsSensorList.splice(index,1)
       logger.warn("New btsSensorList:", btsSensorList);
@@ -328,7 +328,7 @@ function connect(){
               //   logger.debug("start time: ",start);
               // }
               if (btsSensorList.length) { // if sensor list is empty do nothing
-                if (btsSensorList.indexOf(peripheral.uuid.toString()) > -1) {  //check if sensor is on list
+                if (btsSensorList.toLowerCase().indexOf(peripheral.uuid.toString()) > -1) {  //check if sensor is on list
                   if (!(btsSensorListDone.indexOf(peripheral.uuid.toString()) > -1)) {  //check if we have already read sensor
                     alreadyScanned=0;
                     sensorObjects[peripheral.uuid]=peripheral;
