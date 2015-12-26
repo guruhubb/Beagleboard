@@ -90,6 +90,45 @@ var btsID;
 // var sensorID = 'S001';
 
 
+
+// check network connectivity status
+var EventEmitter = require('events').EventEmitter,
+    spawn = require('child_process').spawn,
+    rl = require('readline');
+
+var RE_SUCCESS = /bytes from/i,
+    INTERVAL = 2, // in seconds
+    IP = '8.8.8.8';
+
+var proc = spawn('ping', ['-v', '-n', '-i', INTERVAL, IP]),
+    rli = rl.createInterface(proc.stdout, proc.stdin),
+    network = new EventEmitter();
+
+network.online = false;
+
+rli.on('line', function(str) {
+  if (RE_SUCCESS.test(str)) {
+    if (!network.online) {
+      network.online = true;
+      network.emit('online');
+    }
+  } else if (network.online) {
+    network.online = false;
+    network.emit('offline');
+  }
+});
+
+
+
+// then just listen for the `online` and `offline` events ...
+network.on('online', function() {
+  console.log('online!');
+}).on('offline', function() {
+  console.log('offline!');
+});
+
+
+
 // run shell command
 function run_cmd(cmd, args, callBack ) {
     var spawn = require('child_process').spawn;
