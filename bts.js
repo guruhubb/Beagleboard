@@ -122,9 +122,9 @@ rli.on('line', function(str) {
 
 // then just listen for the `online` and `offline` events ...
 network.on('online', function() {
-  console.log('online!');
+  logger.error('++++++++++++ online! +++++++++++++');
 }).on('offline', function() {
-  console.log('offline!');
+  logger.error('------------ offline! -------------');
 });
 
 
