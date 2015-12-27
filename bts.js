@@ -804,6 +804,11 @@ function updateBTSConfig(){
 
 // send plant data to cloud
 function addPlantData(sensorData,callback){
+  network.on('online', function() {
+    logger.error('++++++++++++ online! +++++++++++++');
+  }).on('offline', function() {
+    logger.error('------------ offline! -------------');
+  });
   ddpclient.call(
     'addPlantData',            // name of Meteor Method being called
     [sensorData],              // parameters to send to Meteor Method
