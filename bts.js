@@ -766,40 +766,44 @@ function readWriteToBLE (peripheral,services,characteristics) {
 // call cloud to set the sensor config to current state
 function updateSensorConfig(sn,led){
   // data = {btsID:btsID, sn:sn, led:led};
-  ddpclient.call(
-    'resetSensorLED',            // name of Meteor Method being called
-    [sn],                       // parameters to send to Meteor Method
-    function (err, result) {      // callback which returns the method call results
-      logger.warn('called resetSensorLED: ', result);
-      if (err){
-        logger.error('Error10 - DDP update Sensor config error: ',err);  
+  if (network.online){
+    ddpclient.call(
+      'resetSensorLED',            // name of Meteor Method being called
+      [sn],                       // parameters to send to Meteor Method
+      function (err, result) {      // callback which returns the method call results
+        logger.warn('called resetSensorLED: ', result);
+        if (err){
+          logger.error('Error10 - DDP update Sensor config error: ',err);  
+        }
+      },
+      function () {                 // fires when server has finished
+        logger.debug('done resetSensorLED');  
+        // callback();
       }
-    },
-    function () {                 // fires when server has finished
-      logger.debug('done resetSensorLED');  
-      // callback();
-    }
-  );
+    );
+  }
 }
   
 // call cloud to set the bts config to current state
 function updateBTSConfig(){
   // data = {rebootBB:rebootBB, restartApp:restartApp, upgradeFW:upgradeFW, reverseSSH:reverseSSH,closeTunnel:closeTunnel
   //   , btsID:btsID};
-  ddpclient.call(
-    'resetBTSConfig',            // name of Meteor Method being called
-    [btsID],                       // parameters to send to Meteor Method
-    function (err, result) {      // callback which returns the method call results
-      logger.warn('called resetBTSConfig: ', result );
-      if (err){
-        logger.error('Error11 - DDP update BTS config error: ',err);  
+  if (network.online){ 
+    ddpclient.call(
+      'resetBTSConfig',            // name of Meteor Method being called
+      [btsID],                       // parameters to send to Meteor Method
+      function (err, result) {      // callback which returns the method call results
+        logger.warn('called resetBTSConfig: ', result );
+        if (err){
+          logger.error('Error11 - DDP update BTS config error: ',err);  
+        }
+      },
+      function () {                 // fires when server has finished
+        logger.debug('done resetBTSConfig');  
+        // callback();
       }
-    },
-    function () {                 // fires when server has finished
-      logger.debug('done resetBTSConfig');  
-      // callback();
-    }
-  );
+    );
+  }
 }
 
 // send plant data to cloud
