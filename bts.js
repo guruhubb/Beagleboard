@@ -809,20 +809,22 @@ function addPlantData(sensorData,callback){
   }).on('offline', function() {
     logger.error('------------ offline! -------------');
   });
-  ddpclient.call(
-    'addPlantData',            // name of Meteor Method being called
-    [sensorData],              // parameters to send to Meteor Method
-    function (err, result) {   // callback which returns the method call results
-      logger.debug('called addPlantdata: ', result);
-      if (err){
-        logger.error('Error4 - DDP upload data error: ',err);  
+  if (network.online){
+    ddpclient.call(
+      'addPlantData',            // name of Meteor Method being called
+      [sensorData],              // parameters to send to Meteor Method
+      function (err, result) {   // callback which returns the method call results
+        logger.debug('called addPlantdata: ', result);
+        if (err){
+          logger.error('Error4 - DDP upload data error: ',err);  
+        }
+      },
+      function () {              // fires when server has finished
+        logger.debug('updated');  
+        callback();
       }
-    },
-    function () {              // fires when server has finished
-      logger.debug('updated');  
-      callback();
-    }
-  );
+    );
+  }
 }
 
 // Check LED on/off. For every sensor that is ON, check start time and compare with current time
