@@ -334,7 +334,10 @@ function connect(){
         } 
         logger.info('connected!');
         if (wasReconnect) {
-          logger.info('Reestablishment of a connection.');
+          logger.info('Reestablishment of a connection');
+          noble.stopScanning();
+          logger.info('Stopping scan and restarting app');
+          process.exit(0);
         }
         //Subscribe to a Meteor Collection
 
