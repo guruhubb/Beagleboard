@@ -160,8 +160,10 @@ function checkSensorObjectsList () {
 // ddp call
 var ddpclient = new DDPClient({
   host : "ezgrowr.com",
-  port : 3000,  //443
-  ssl  : false, //true
+  // port : 3000,  //443
+  // ssl  : false, //true
+  port : 3010,  //443
+  ssl  : true, //true
   autoReconnect : true,
   autoReconnectTimer : 500,
   maintainCollections : true,
