@@ -158,27 +158,27 @@ function checkSensorObjectsList () {
 }
 
 // ddp call
-var ddpclient = new DDPClient({
-  host : "ezgrowr.com",
-  // port : 3000,  //443
-  // ssl  : false, //true
-  port : 3010,  //443
-  ssl  : true, //true
-  autoReconnect : true,
-  autoReconnectTimer : 500,
-  maintainCollections : true,
-  ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
-  useSockJs: true
-});
-
-// alternate ddp call
 // var ddpclient = new DDPClient({
+//   host : "ezgrowr.com",
+//   port : 3000,  //443
+//   ssl  : false, //true
 //   autoReconnect : true,
 //   autoReconnectTimer : 500,
 //   maintainCollections : true,
 //   ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
-//   url: 'wss://ezgrowr.com/websocket'
+//   useSockJs: true
 // });
+
+// alternate ddp call
+var ddpclient = new DDPClient({
+  host : "ezgrowr.com",
+  port : 3010,  //443
+  autoReconnect : true,
+  autoReconnectTimer : 500,
+  maintainCollections : true,
+  ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
+  url: 'wss://ezgrowr.com/websocket'
+});
 
 //Log all messages if a "changed" or "added" message is received and then update the sensor lists and parameters
 ddpclient.on('message', function (msg) {
