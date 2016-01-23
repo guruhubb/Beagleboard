@@ -171,13 +171,13 @@ function checkSensorObjectsList () {
 
 // alternate ddp call
 var ddpclient = new DDPClient({
-  host : "ezgrowr.com",
-  port : 3010,  //443
+  // host : "ezgrowr.com",
+  // port : 3010,  //443
   autoReconnect : true,
   autoReconnectTimer : 500,
   maintainCollections : true,
   ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
-  url: 'wss://ezgrowr.com/websocket'
+  url: 'wss://ezgrowr.com:3010/websocket'
 });
 
 //Log all messages if a "changed" or "added" message is received and then update the sensor lists and parameters
