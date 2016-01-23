@@ -177,7 +177,7 @@ var ddpclient = new DDPClient({
   autoReconnectTimer : 500,
   maintainCollections : true,
   ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
-  url: 'wss://ezgrowr.com:3010/websocket'
+  url: 'wss://ezgrowr.com/websocket'
 });
 
 //Log all messages if a "changed" or "added" message is received and then update the sensor lists and parameters
