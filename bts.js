@@ -331,7 +331,7 @@ function connect(){
     function(){
       ddpclient.connect(function(error, wasReconnect) {
         if (error) {
-          logger.error('error: DDP connection error!');
+          logger.error('error: DDP connection error!',error);
           return;
         } 
         logger.info('connected!');

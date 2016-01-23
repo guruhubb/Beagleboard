@@ -17,17 +17,25 @@ var btsSensorList=[];
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; //need this to prevent "unable to verify leaf signature" 
 
 
+// var ddpclient = new DDPClient({
+//   host : "ezgrowr.com",
+//   port : 3010,
+//   ssl  : true,
+//   autoReconnect : true,
+//   autoReconnectTimer : 500,
+//   maintainCollections : true,
+//   ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
+//   useSockJs: true
+// });
 var ddpclient = new DDPClient({
-  host : "ezgrowr.com",
-  port : 3000,
-  ssl  : false,
+  // host : "ezgrowr.com",
+  // port : 3010,  //443
   autoReconnect : true,
   autoReconnectTimer : 500,
   maintainCollections : true,
   ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
-  useSockJs: true
+  url: 'wss://ezgrowr.com/websocket'
 });
-
 // bts and sensor serial number
 var btsID = '4414BBBK0072';  
 var sensorID ='a0143d0c6007';
@@ -49,40 +57,40 @@ ddpclient.connect(function(error) {
     }
   );
 
-  //plant data to be pushed to Cloud; 
-  var plantData = {sn:sensorID, sT:25, aT:26, sEC:0.01, rssi:88, txP:0, bL:88, sL:1.0,sM:0.0,mD:Date.now()};
+//   //plant data to be pushed to Cloud; 
+//   var plantData = {sn:sensorID, sT:25, aT:26, sEC:0.01, rssi:88, txP:0, bL:88, sL:1.0,sM:0.0,mD:Date.now()};
 
-  //call cloud methods to push data
-  ddpclient.call( 
-    'resetBTSConfig',             // name of Meteor Method being called
-    [btsID],             // parameters to send to Meteor Method
-    function (err, result) {   // callback which returns the method call results
-      console.log('called resetBTSConfig: ', result, ' err: ', JSON.stringify(err) );
-    },
-    function () {              // callback which fires when server has finished
-      console.log('done resetBTSConfig');  // sending any updated documents as a result of
-    }
-  );
-  ddpclient.call(
-    'resetSensorLED',             // name of Meteor Method being called
-    [sensorID],             // parameters to send to Meteor Method
-    function (err, result) {   // callback which returns the method call results
-      console.log('called resetSensorLED: ', result, ' err: ', JSON.stringify(err) );
-    },
-    function () {              // callback which fires when server has finished
-      console.log('done resetSensorLED');  // sending any updated documents as a result of
-    }
-  );
-  ddpclient.call(
-    'addPlantData',             // name of Meteor Method being called
-    [plantData],             // parameters to send to Meteor Method
-    function (err, result) {   // callback which returns the method call results
-      console.log('called addPlantData: ', result, ' err: ', JSON.stringify(err) );
-    },
-    function () {              // callback which fires when server has finished
-      console.log('done addPlantdata');  // sending any updated documents as a result of
-    }
-  );
+//   //call cloud methods to push data
+//   ddpclient.call( 
+//     'resetBTSConfig',             // name of Meteor Method being called
+//     [btsID],             // parameters to send to Meteor Method
+//     function (err, result) {   // callback which returns the method call results
+//       console.log('called resetBTSConfig: ', result, ' err: ', JSON.stringify(err) );
+//     },
+//     function () {              // callback which fires when server has finished
+//       console.log('done resetBTSConfig');  // sending any updated documents as a result of
+//     }
+//   );
+//   ddpclient.call(
+//     'resetSensorLED',             // name of Meteor Method being called
+//     [sensorID],             // parameters to send to Meteor Method
+//     function (err, result) {   // callback which returns the method call results
+//       console.log('called resetSensorLED: ', result, ' err: ', JSON.stringify(err) );
+//     },
+//     function () {              // callback which fires when server has finished
+//       console.log('done resetSensorLED');  // sending any updated documents as a result of
+//     }
+//   );
+//   ddpclient.call(
+//     'addPlantData',             // name of Meteor Method being called
+//     [plantData],             // parameters to send to Meteor Method
+//     function (err, result) {   // callback which returns the method call results
+//       console.log('called addPlantData: ', result, ' err: ', JSON.stringify(err) );
+//     },
+//     function () {              // callback which fires when server has finished
+//       console.log('done addPlantdata');  // sending any updated documents as a result of
+//     }
+//   );
 });
 
 
