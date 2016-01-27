@@ -386,9 +386,13 @@ function connect(){
                     stop = Math.floor(Date.now() / 1000);
                     logger.info('\n already scanned : '+ btsSensorListDone);
                     logger.info('scanned:',alreadyScanned);
+                    logger.info('scanTime:',scanTime);
+                    logger.info('btsSensorList:',btsSensorList.length);
+                    logger.info('stop-start:',stop-start);
+
                     var done = arraysEqual(btsSensorListDone,btsSensorList);
                     if (done || stop-start > scanTime*btsSensorList.length || 
-                      alreadyScanned > scanTime*btsSensorList.length ) {    
+                      alreadyScanned > btsSensorList.length ) {    
                       if (done) logger.warn("***** All Sensors accounted for *****");  
                       counter =0;
                       alreadyScanned=0;
