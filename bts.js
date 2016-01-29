@@ -104,13 +104,14 @@ var proc = spawn('ping', ['-v', '-n', '-i', INTERVAL, IP]),
     rli = rl.createInterface(proc.stdout, proc.stdin),
     network = new EventEmitter();
 
-network.online = false;
+network.online = true;
 
 rli.on('line', function(str) {
   if (RE_SUCCESS.test(str)) {
     if (!network.online) {
       network.online = true;
       network.emit('online');
+      restart();
     }
   } else if (network.online) {
     network.online = false;
@@ -817,11 +818,11 @@ function updateBTSConfig(){
 
 // send plant data to cloud
 function addPlantData(sensorData,callback){
-  network.on('online', function() {
-    logger.error('++++++++++++ online! +++++++++++++');
-  }).on('offline', function() {
-    logger.error('------------ offline! -------------');
-  });
+  // network.on('online', function() {
+  //   logger.error('++++++++++++ online! addPlantdata +++++++++++++');
+  // }).on('offline', function() {
+  //   logger.error('------------ offline! addPlantdata -------------');
+  // });
   if (network.online){
     ddpclient.call(
       'addPlantData',            // name of Meteor Method being called
