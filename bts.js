@@ -532,8 +532,8 @@ function exploreAllSensors (){
           else {
             logger.info('timeout for minReadInterval ...')
             setTimeout(function(){
-                        explore(sensorObjects[keys[index]],callback);
-                    }, 1000*(minReadInterval-timelapsed));
+              explore(sensorObjects[keys[index]],callback);
+              }, 1000*(minReadInterval-timelapsed));
           }
         },
         function(callback) {
@@ -619,7 +619,7 @@ function explore(peripheral,callback) {
   });
 
   peripheral.connect(function(err) {
-    // logger.info('inside connect function...');
+    logger.info('inside connect function...');
     if (!err) {
       logger.debug("connected to ... ",peripheral.uuid);
       if (!peripheral){
@@ -825,7 +825,7 @@ function addPlantData(sensorData,callback){
   // }).on('offline', function() {
   //   logger.error('------------ offline! addPlantdata -------------');
   // });
-  if (network.online){
+  if (networkOn){
     ddpclient.call(
       'addPlantData',            // name of Meteor Method being called
       [sensorData],              // parameters to send to Meteor Method
