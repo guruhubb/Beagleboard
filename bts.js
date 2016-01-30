@@ -104,7 +104,7 @@ var proc = spawn('ping', ['-v', '-n', '-i', INTERVAL, IP]),
     rli = rl.createInterface(proc.stdout, proc.stdin),
     network = new EventEmitter();
 
-network.online = true;
+network.online = false;
 
 rli.on('line', function(str) {
   if (RE_SUCCESS.test(str)) {
