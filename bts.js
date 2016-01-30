@@ -111,7 +111,6 @@ rli.on('line', function(str) {
     if (!network.online) {
       network.online = true;
       network.emit('online');
-      restart();
     }
   } else if (network.online) {
     network.online = false;
