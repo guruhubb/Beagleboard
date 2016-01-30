@@ -86,6 +86,7 @@ var index = 0;
 var start = Math.floor(Date.now() / 1000);
 var stop;
 var btsID;
+var networkOn;
 // var btsID = '4414BBBK0072';  //this should be serial number of bbb
 // var sensorID = 'S001';
 
@@ -111,10 +112,12 @@ rli.on('line', function(str) {
     if (!network.online) {
       network.online = true;
       network.emit('online');
+      networkOn = true;
     }
   } else if (network.online) {
     network.online = false;
     network.emit('offline');
+    networkOn = false;
   }
 });
 
@@ -122,11 +125,9 @@ rli.on('line', function(str) {
 
 // then just listen for the `online` and `offline` events ...
 network.on('online', function() {
-  logger.error('++++++++++++ online! +++++++++++++',network.online);
-  network.online = true;
+  logger.error('++++++++++++ online! +++++++++++++',networkOn);
 }).on('offline', function() {
-  logger.error('------------ offline! -------------', network.online);
-  network.online = false;
+  logger.error('------------ offline! -------------', networkOn);
 });
 
 
