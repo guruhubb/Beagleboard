@@ -109,15 +109,17 @@ network.online = false;
 
 rli.on('line', function(str) {
   if (RE_SUCCESS.test(str)) {
+    networkOn = true;
     if (!network.online) {
       network.online = true;
       network.emit('online');
-      networkOn = true;
     }
-  } else if (network.online) {
-    network.online = false;
-    network.emit('offline');
+  } else {
     networkOn = false;
+    if (network.online) {
+      network.online = false;
+      network.emit('offline');
+    }
   }
 });
 
@@ -778,7 +780,7 @@ function readWriteToBLE (peripheral,services,characteristics) {
 // call cloud to set the sensor config to current state
 function updateSensorConfig(sn,led){
   // data = {btsID:btsID, sn:sn, led:led};
-  if (network.online){
+  if (networkOn){
     ddpclient.call(
       'resetSensorLED',            // name of Meteor Method being called
       [sn],                       // parameters to send to Meteor Method
@@ -800,7 +802,7 @@ function updateSensorConfig(sn,led){
 function updateBTSConfig(){
   // data = {rebootBB:rebootBB, restartApp:restartApp, upgradeFW:upgradeFW, reverseSSH:reverseSSH,closeTunnel:closeTunnel
   //   , btsID:btsID};
-  if (network.online){ 
+  if (networkOn){ 
     ddpclient.call(
       'resetBTSConfig',            // name of Meteor Method being called
       [btsID],                       // parameters to send to Meteor Method
