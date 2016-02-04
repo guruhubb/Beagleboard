@@ -105,7 +105,7 @@ var proc = spawn('ping', ['-v', '-n', '-i', INTERVAL, IP]),
     rli = rl.createInterface(proc.stdout, proc.stdin),
     network = new EventEmitter();
 
-network.online = false;
+network.online = true;
 
 rli.on('line', function(str) {
   if (RE_SUCCESS.test(str)) {
@@ -130,7 +130,7 @@ network.on('online', function() {
   logger.error('++++++++++++ online! +++++++++++++',networkOn);
   // noble.stopScanning();
   // logger.info('Stopping scan and restarting app');
-  // process.exit(0);
+  process.exit(0);
 }).on('offline', function() {
   logger.error('------------ offline! -------------', networkOn);
 });
