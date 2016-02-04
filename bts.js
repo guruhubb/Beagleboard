@@ -105,7 +105,7 @@ var proc = spawn('ping', ['-v', '-n', '-i', INTERVAL, IP]),
     rli = rl.createInterface(proc.stdout, proc.stdin),
     network = new EventEmitter();
 
-network.online = true;
+network.online = false;
 
 rli.on('line', function(str) {
   if (RE_SUCCESS.test(str)) {
@@ -131,24 +131,7 @@ rli.on('line', function(str) {
 
 
 
-// then just listen for the `online` and `offline` events ...
-network.on('online', function() {
-  logger.error('++++++++++++ online! +++++++++++++',networkOn);
-  ddpclient = new DDPClient({
-    // host : "ezgrowr.com",
-    // port : 3010,  //443
-    autoReconnect : true,
-    autoReconnectTimer : 500,
-    maintainCollections : true,
-    ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
-    url: 'wss://ezgrowr.com/websocket'
-  });
-  // noble.stopScanning();
-  // logger.info('Stopping scan and restarting app');
-  // process.exit(0);
-}).on('offline', function() {
-  logger.error('------------ offline! -------------', networkOn);
-});
+
 
 
 
@@ -197,8 +180,8 @@ function checkSensorObjectsList () {
 var ddpclient = new DDPClient({
   // host : "ezgrowr.com",
   // port : 3010,  //443
-  autoReconnect : true,
-  autoReconnectTimer : 500,
+  // autoReconnect : true,
+  // autoReconnectTimer : 500,
   maintainCollections : true,
   ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
   url: 'wss://ezgrowr.com/websocket'
@@ -352,6 +335,25 @@ ddpclient.on('socket-close', function(code, message) {
 ddpclient.on('socket-error', function(error) {
   logger.error("DDP SOCKET Error: ", error);
   setTimeout(function(){ process.exit(0); },1000);
+});
+
+// then just listen for the `online` and `offline` events ...
+network.on('online', function() {
+  logger.error('++++++++++++ online! +++++++++++++',networkOn);
+  ddpclient = new DDPClient({
+    // host : "ezgrowr.com",
+    // port : 3010,  //443
+    autoReconnect : false,
+    // autoReconnectTimer : 500,
+    maintainCollections : true,
+    ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
+    url: 'wss://ezgrowr.com/websocket'
+  });
+  // noble.stopScanning();
+  // logger.info('Stopping scan and restarting app');
+  // process.exit(0);
+}).on('offline', function() {
+  logger.error('------------ offline! -------------', networkOn);
 });
 
 
