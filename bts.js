@@ -113,11 +113,11 @@ rli.on('line', function(str) {
     if (!network.online) {
       network.online = true;
       network.emit('online');
-      function(){
-        logger.error('Restarting...')
-        setTimeout(function(){
-          process.exit(0);
-        }, 1500);
+      // function(){
+      //   logger.error('Restarting...')
+      //   setTimeout(function(){
+      //     process.exit(0);
+      //   }, 1500);
       }
     }
   } else {
