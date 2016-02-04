@@ -128,9 +128,9 @@ rli.on('line', function(str) {
 // then just listen for the `online` and `offline` events ...
 network.on('online', function() {
   logger.error('++++++++++++ online! +++++++++++++',networkOn);
-  noble.stopScanning();
-  logger.info('Stopping scan and restarting app');
-  process.exit(0);
+  // noble.stopScanning();
+  // logger.info('Stopping scan and restarting app');
+  // process.exit(0);
 }).on('offline', function() {
   logger.error('------------ offline! -------------', networkOn);
 });
