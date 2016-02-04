@@ -827,7 +827,7 @@ function addPlantData(sensorData,callback){
   // }).on('offline', function() {
   //   logger.error('------------ offline! addPlantdata -------------');
   // });
-  if (networkOn){
+  // if (networkOn){
     ddpclient.call(
       'addPlantData',            // name of Meteor Method being called
       [sensorData],              // parameters to send to Meteor Method
@@ -842,7 +842,7 @@ function addPlantData(sensorData,callback){
         callback();
       }
     );
-  }
+  // }
 }
 
 // Check LED on/off. For every sensor that is ON, check start time and compare with current time
