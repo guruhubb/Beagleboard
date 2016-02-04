@@ -128,6 +128,9 @@ rli.on('line', function(str) {
 // then just listen for the `online` and `offline` events ...
 network.on('online', function() {
   logger.error('++++++++++++ online! +++++++++++++',networkOn);
+  noble.stopScanning();
+  logger.info('Stopping scan and restarting app');
+  process.exit(0);
 }).on('offline', function() {
   logger.error('------------ offline! -------------', networkOn);
 });
@@ -345,9 +348,9 @@ function connect(){
         logger.info('connected!');
         if (wasReconnect) {
           logger.info('Reestablishment of a connection');
-          // noble.stopScanning();
-          // logger.info('Stopping scan and restarting app');
-          // process.exit(0);
+          noble.stopScanning();
+          logger.info('Stopping scan and restarting app');
+          process.exit(0);
         }
         //Subscribe to a Meteor Collection
 
@@ -791,7 +794,7 @@ function updateSensorConfig(sn,led){
         logger.warn('called resetSensorLED: ', result);
         if (err){
           logger.error('Error10 - DDP update Sensor config error: ',err);  
-          process.exit(0);
+          // process.exit(0);
         }
       },
       function () {                 // fires when server has finished
@@ -814,7 +817,7 @@ function updateBTSConfig(){
         logger.warn('called resetBTSConfig: ', result );
         if (err){
           logger.error('Error11 - DDP update BTS config error: ',err);  
-          process.exit(0);
+          // process.exit(0);
         }
       },
       function () {                 // fires when server has finished
@@ -841,7 +844,7 @@ function addPlantData(sensorData,callback){
         logger.debug('called addPlantdata: ', result);
         if (err){
           logger.error('Error4 - DDP upload data error: ',err);  
-           process.exit(0);
+           // process.exit(0);
         }
       },
       function () {              // fires when server has finished
