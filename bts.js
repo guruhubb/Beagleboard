@@ -141,15 +141,7 @@ network.on('online', function() {
   logger.error('------------ offline! -------------', networkOn);
 });
 
-ddpclient.on('socket-close', function(code, message) {
-  logger.error("DDP SOCKET Close: code - ", code," message - ", message);
-  setTimeout(function(){ connect() },1000);
-});
 
-ddpclient.on('socket-error', function(error) {
-  logger.error("DDP SOCKET Error: ", error);
-  setTimeout(function(){ ddpclient.close() },1000);
-});
 
 
 // run shell command
@@ -343,7 +335,19 @@ ddpclient.on('message', function (msg) {
   }
 });
 
+ddpclient.on('socket-close', function(code, message) {
+  logger.error("DDP SOCKET Close: code - ", code," message - ", message);
+  setTimeout(function(){ connect() },1000);
+});
+
+ddpclient.on('socket-error', function(error) {
+  logger.error("DDP SOCKET Error: ", error);
+  setTimeout(function(){ ddpclient.close() },1000);
+});
+
+
 connect();
+
 
 function connect(){
   async.series([
