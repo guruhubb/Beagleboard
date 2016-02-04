@@ -118,7 +118,7 @@ rli.on('line', function(str) {
       //   setTimeout(function(){
       //     process.exit(0);
       //   }, 1500);
-      }
+      // }
     }
   } else {
     networkOn = false;
