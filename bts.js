@@ -337,12 +337,12 @@ ddpclient.on('message', function (msg) {
 
 ddpclient.on('socket-close', function(code, message) {
   logger.error("DDP SOCKET Close: code - ", code," message - ", message);
-  setTimeout(function(){ connect() },1000);
+  setTimeout(function(){ process.exit(0); },1000);
 });
 
 ddpclient.on('socket-error', function(error) {
   logger.error("DDP SOCKET Error: ", error);
-  setTimeout(function(){ ddpclient.close() },1000);
+  setTimeout(function(){ process.exit(0); },1000);
 });
 
 
@@ -359,17 +359,17 @@ function connect(){
       ddpclient.connect(function(error, wasReconnect) {
         if (error) {
           logger.error('error: DDP connection error!',error);
-          noble.stopScanning();
-          logger.info('Stopping scan and restarting app');
-          process.exit(0);
+          // noble.stopScanning();
+          // logger.info('Stopping scan and restarting app');
+          // process.exit(0);
           return;
         } 
         logger.info('connected!');
         if (wasReconnect) {
           logger.info('Reestablishment of a connection');
-          noble.stopScanning();
-          logger.info('Stopping scan and restarting app');
-          process.exit(0);
+          // noble.stopScanning();
+          // logger.info('Stopping scan and restarting app');
+          // process.exit(0);
         }
         //Subscribe to a Meteor Collection
 
@@ -813,7 +813,7 @@ function updateSensorConfig(sn,led){
         logger.warn('called resetSensorLED: ', result);
         if (err){
           logger.error('Error10 - DDP update Sensor config error: ',err);  
-          process.exit(0);
+          // process.exit(0);
         }
       },
       function () {                 // fires when server has finished
@@ -836,7 +836,7 @@ function updateBTSConfig(){
         logger.warn('called resetBTSConfig: ', result );
         if (err){
           logger.error('Error11 - DDP update BTS config error: ',err);  
-          process.exit(0);
+          // process.exit(0);
         }
       },
       function () {                 // fires when server has finished
@@ -863,7 +863,7 @@ function addPlantData(sensorData,callback){
         logger.debug('called addPlantdata: ', result);
         if (err){
           logger.error('Error4 - DDP upload data error: ',err);  
-           process.exit(0);
+           // process.exit(0);
         }
       },
       function () {              // fires when server has finished
