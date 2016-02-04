@@ -794,7 +794,7 @@ function updateSensorConfig(sn,led){
         logger.warn('called resetSensorLED: ', result);
         if (err){
           logger.error('Error10 - DDP update Sensor config error: ',err);  
-          // process.exit(0);
+          process.exit(0);
         }
       },
       function () {                 // fires when server has finished
@@ -817,7 +817,7 @@ function updateBTSConfig(){
         logger.warn('called resetBTSConfig: ', result );
         if (err){
           logger.error('Error11 - DDP update BTS config error: ',err);  
-          // process.exit(0);
+          process.exit(0);
         }
       },
       function () {                 // fires when server has finished
@@ -844,7 +844,7 @@ function addPlantData(sensorData,callback){
         logger.debug('called addPlantdata: ', result);
         if (err){
           logger.error('Error4 - DDP upload data error: ',err);  
-           // process.exit(0);
+           process.exit(0);
         }
       },
       function () {              // fires when server has finished
