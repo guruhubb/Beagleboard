@@ -130,7 +130,7 @@ network.on('online', function() {
   logger.error('++++++++++++ online! +++++++++++++',networkOn);
   // noble.stopScanning();
   // logger.info('Stopping scan and restarting app');
-  process.exit(0);
+  // process.exit(0);
 }).on('offline', function() {
   logger.error('------------ offline! -------------', networkOn);
 });
