@@ -213,7 +213,7 @@ ddpclient.on('message', function (msg) {
           if (bts[msg["id"]]["scanTime"])
             scanTime = bts[msg["id"]]["scanTime"];
           if (bts[msg["id"]]["minReadInterval"])
-            scanTime = bts[msg["id"]]["minReadInterval"];
+            minReadInterval = bts[msg["id"]]["minReadInterval"];
           if (bts[msg["id"]]["upgradeFW"])
             upgradeFW = bts[msg["id"]]["upgradeFW"];
           if (bts[msg["id"]]["rebootBB"])
@@ -270,7 +270,7 @@ ddpclient.on('message', function (msg) {
           if (bts[msg["id"]]["scanTime"])
             scanTime = bts[msg["id"]]["scanTime"];
           if (bts[msg["id"]]["minReadInterval"])
-            scanTime = bts[msg["id"]]["minReadInterval"];
+            minReadInterval = bts[msg["id"]]["minReadInterval"];
           if (bts[msg["id"]]["upgradeFW"])
             upgradeFW = bts[msg["id"]]["upgradeFW"];
           if (bts[msg["id"]]["rebootBB"])
