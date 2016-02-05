@@ -344,7 +344,7 @@ ddpclient.on('socket-close', function(code, message) {
 
 ddpclient.on('socket-error', function(error) {
   logger.error("DDP SOCKET Error: ", error);
-  ddpclient.connect():
+  ddpclient.connect();
   // setTimeout(function(){ process.exit(0); },1000);
 });
 
