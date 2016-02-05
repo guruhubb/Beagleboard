@@ -105,7 +105,7 @@ var proc = spawn('ping', ['-v', '-n', '-i', INTERVAL, IP]),
     rli = rl.createInterface(proc.stdout, proc.stdin),
     network = new EventEmitter();
 
-network.online = false;
+network.online = true;
 
 rli.on('line', function(str) {
   if (RE_SUCCESS.test(str)) {
@@ -116,7 +116,7 @@ rli.on('line', function(str) {
       // function(){
       //   logger.error('Restarting...')
       //   setTimeout(function(){
-      //     process.exit(0);
+          process.exit(0);
       //   }, 1500);
       // }
     }
