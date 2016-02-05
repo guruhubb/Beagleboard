@@ -338,13 +338,13 @@ ddpclient.on('message', function (msg) {
 
 ddpclient.on('socket-close', function(code, message) {
   logger.error("DDP SOCKET Close: code - ", code," message - ", message);
-  // ddpclient.connect();
+  setTimeout(function(){ ddpclient.connect();},1000);
   // setTimeout(function(){ process.exit(0); },1000);
 });
 
 ddpclient.on('socket-error', function(error) {
   logger.error("DDP SOCKET Error: ", error);
-  ddpclient.connect();
+  setTimeout(function(){ ddpclient.connect();},1000);
   // setTimeout(function(){ process.exit(0); },1000);
 });
 
@@ -362,7 +362,7 @@ function connect(){
       ddpclient.connect(function(error, wasReconnect) {
         if (error) {
           logger.error('error: DDP connection error!',error);
-          ddpclient.connect();
+          setTimeout(function(){ ddpclient.connect();},2000);
           // noble.stopScanning();
           // logger.info('Stopping scan and restarting app');
           // process.exit(0);
