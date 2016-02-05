@@ -116,7 +116,7 @@ rli.on('line', function(str) {
       // function(){
       //   logger.error('Restarting...')
       //   setTimeout(function(){
-          process.exit(0);
+          // process.exit(0);
       //   }, 1500);
       // }
     }
@@ -134,6 +134,7 @@ rli.on('line', function(str) {
 // then just listen for the `online` and `offline` events ...
 network.on('online', function() {
   logger.error('++++++++++++ online! +++++++++++++',networkOn);
+  ddpclient.connect();
   // noble.stopScanning();
   // logger.info('Stopping scan and restarting app');
   // process.exit(0);
@@ -188,7 +189,7 @@ function checkSensorObjectsList () {
 var ddpclient = new DDPClient({
   // host : "ezgrowr.com",
   // port : 3010,  //443
-  autoReconnect : true,
+  autoReconnect : false,
   autoReconnectTimer : 500,
   maintainCollections : true,
   ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
@@ -337,12 +338,12 @@ ddpclient.on('message', function (msg) {
 
 ddpclient.on('socket-close', function(code, message) {
   logger.error("DDP SOCKET Close: code - ", code," message - ", message);
-  setTimeout(function(){ process.exit(0); },1000);
+  // setTimeout(function(){ process.exit(0); },1000);
 });
 
 ddpclient.on('socket-error', function(error) {
   logger.error("DDP SOCKET Error: ", error);
-  setTimeout(function(){ process.exit(0); },1000);
+  // setTimeout(function(){ process.exit(0); },1000);
 });
 
 
