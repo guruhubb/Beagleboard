@@ -362,6 +362,7 @@ function connect(){
       ddpclient.connect(function(error, wasReconnect) {
         if (error) {
           logger.error('error: DDP connection error!',error);
+          ddpclient.connect();
           // noble.stopScanning();
           // logger.info('Stopping scan and restarting app');
           // process.exit(0);
