@@ -1112,7 +1112,7 @@ function upgrade () {
     function(callback){
       logger.error('Upgrading FW ...')
       setTimeout(function(){
-        exec('sudo -u growr git pull',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('sudo -u growr git pull origin master',function(code,output){ logger.error(code);logger.warn(output);});
         callback();  
       }, 1000);
     },
