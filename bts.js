@@ -371,9 +371,9 @@ function connect(){
         logger.info('connected!');
         if (wasReconnect) {
           logger.info('Reestablishment of a connection');
-          noble.stopScanning();
-          logger.info('Stopping scan and restarting app');
-          process.exit(0);
+          // noble.stopScanning();
+          // logger.info('Stopping scan and restarting app');
+          // process.exit(0);
         } 
 
 
