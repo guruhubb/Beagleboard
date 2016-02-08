@@ -189,8 +189,8 @@ function checkSensorObjectsList () {
 var ddpclient = new DDPClient({
   // host : "ezgrowr.com",
   // port : 3010,  //443
-  autoReconnect : false,
-  // autoReconnectTimer : 500,
+  autoReconnect : true,
+  autoReconnectTimer : 500,
   maintainCollections : true,
   ddpVersion : '1',  // ['1', 'pre2', 'pre1'] available
   url: 'wss://ezgrowr.com/websocket'
