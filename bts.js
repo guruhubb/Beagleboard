@@ -374,7 +374,9 @@ function connect(){
           // noble.stopScanning();
           // logger.info('Stopping scan and restarting app');
           // process.exit(0);
-        }
+        } else {
+
+
         //Subscribe to a Meteor Collection
 
         ddpclient.subscribe(                 // name of Meteor Publish function to subscribe to
@@ -537,6 +539,7 @@ function connect(){
             logger.debug('Looking at previous sensor...discarding current discovery');
           }
         });
+      }
       });
     }
   ])
