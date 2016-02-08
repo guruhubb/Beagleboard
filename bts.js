@@ -338,7 +338,7 @@ ddpclient.on('message', function (msg) {
 
 ddpclient.on('socket-close', function(code, message) {
   logger.error("DDP SOCKET Close: code - ", code," message - ", message);
-  setTimeout(function(){ ddpclient.connect();},1000);
+  // setTimeout(function(){ ddpclient.connect();},1000);
   // setTimeout(function(){ process.exit(0); },1000);
 });
 
