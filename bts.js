@@ -371,10 +371,10 @@ function connect(){
         logger.info('connected!');
         if (wasReconnect) {
           logger.info('Reestablishment of a connection');
-          // noble.stopScanning();
-          // logger.info('Stopping scan and restarting app');
-          // process.exit(0);
-        } else {
+          noble.stopScanning();
+          logger.info('Stopping scan and restarting app');
+          process.exit(0);
+        } 
 
 
         //Subscribe to a Meteor Collection
@@ -539,7 +539,7 @@ function connect(){
             logger.debug('Looking at previous sensor...discarding current discovery');
           }
         });
-      }
+      
       });
     }
   ])
