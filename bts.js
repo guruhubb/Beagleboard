@@ -659,6 +659,7 @@ function explore(peripheral,callback) {
       if (!peripheral){
         logger.error('Error20 - peripheral error: ',err);
       } else {
+        logger.info("will discover services")
         peripheral.discoverSomeServicesAndCharacteristics(readServList, readCharList, function(error, services, characteristics){
           if (!error){
             readWriteToBLE(peripheral,services,characteristics);
@@ -675,6 +676,7 @@ function explore(peripheral,callback) {
   });
 }
 function readWriteToBLE (peripheral,services,characteristics) {
+  logger.info("readWriteToBLE services")
   // logger.info("services: ",services.length);
   // logger.info("characteristics: ",characteristics.length);
   var sensorData={};
