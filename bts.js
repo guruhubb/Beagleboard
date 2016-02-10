@@ -137,7 +137,6 @@ network.on('online', function() {
   logger.error('restarting dbus ...')
   setTimeout(function(){
     exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
-    callback();  
   }, 1000);
 
   // ddpclient.connect();
