@@ -136,7 +136,7 @@ network.on('online', function() {
   logger.error('++++++++++++ online! +++++++++++++',networkOn);
   logger.error('restarting dbus ...')
   setTimeout(function(){
-    exec('sudo -u growr service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
+    exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
     callback();  
   }, 1000);
 
@@ -1086,7 +1086,7 @@ function closeSSH () {
     function(){
       logger.error('Closing tunnel...')
       setTimeout(function(){
-        exec('sudo -u growr kill $(pidof ssh)').code;  
+        exec('sudo kill $(pidof ssh)').code;  
       }, 1500);
     }
   ]);
@@ -1149,8 +1149,8 @@ function upgrade () {
     function(callback){
       logger.error('Copying upstart and logrotate conf files ...')
       setTimeout(function(){
-        exec('sudo -u growr cp /home/growr/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output);});
-        exec('sudo -u growr cp /home/growr/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('sudo cp /home/growr/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('sudo cp /home/growr/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});
         exec('cp /home/growr/bts/private/privateKey /home/growr/.ssh/id_rsa',function(code,output){ logger.error(code);logger.warn(output);});
         exec('cp /home/growr/bts/private/publicKey /home/growr/.ssh/id_rsa.pub',function(code,output){ logger.error(code);logger.warn(output);});
         callback();
@@ -1159,7 +1159,7 @@ function upgrade () {
     function(callback){
       logger.error('Reload UpStart ...')
       setTimeout(function(){
-        exec('sudo -u growr initctl -v reload-configuration ',function(code,output){ logger.error(code);logger.warn(output);});  
+        exec('sudo initctl -v reload-configuration ',function(code,output){ logger.error(code);logger.warn(output);});  
         callback();
       }, 1000);
     },
@@ -1174,7 +1174,7 @@ function upgrade () {
 
 function getSerialNumber() {
   logger.info('getSerialNumber ...');
-  execute('sudo -u growr ./btsSerialNumber.sh', function(callback){
+  execute('sudo ./btsSerialNumber.sh', function(callback){
     btsID = callback;
     logger.warn('btsID = ',btsID);
     // btsID='4414BBBK0072'
