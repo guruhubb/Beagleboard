@@ -348,14 +348,15 @@ ddpclient.on('socket-close', function(code, message) {
   // setTimeout(function(){ process.exit(0); },1000);
 });
 
-ddpclient.on('socket-error', function(error) {
-  logger.error("DDP SOCKET Error: ", error);
-  setTimeout(function(){ 
-    exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
-  },100);
-  setTimeout(function(){ ddpclient.connect();},2000);
-  // setTimeout(function(){ process.exit(0); },1000);
-});
+// ddpclient.on('socket-error', function(error) {
+//   logger.error("DDP SOCKET Error: ", error);
+//   setTimeout(function(){ 
+//     exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
+//   // },100);
+//   // setTimeout(function(){ 
+//     ddpclient.connect();},2000);
+//   // setTimeout(function(){ process.exit(0); },1000);
+// });
 
 
 connect();
@@ -374,8 +375,8 @@ function connect(){
           // setTimeout(function(){ ddpclient.connect();},2000);
           setTimeout(function(){ 
             exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
-          }, 100);
-          setTimeout(function(){ 
+          // }, 100);
+          // setTimeout(function(){ 
             noble.stopScanning();
             logger.info('Stopping scan and restarting app');
             process.exit(0);
