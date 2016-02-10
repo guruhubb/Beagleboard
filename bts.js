@@ -373,7 +373,7 @@ function connect(){
       if (!btsID) getSerialNumber();
       callback();
     },
-    function(){
+    function(callback){
       ddpclient.connect(function(error, wasReconnect) {
         if (error) {
           logger.error('error: DDP connection error!',error);
@@ -563,7 +563,7 @@ function connect(){
             logger.debug('Looking at previous sensor...discarding current discovery');
           }
         });
-      
+        callback();
       });
     }
   ])
@@ -901,7 +901,7 @@ function addPlantData(sensorData,callback){
       },
       function () {              // fires when server has finished
         logger.debug('updated');  
-        callback();
+        // callback();
       }
     );
   }
@@ -1064,10 +1064,11 @@ function reverse () {
       updateBTSConfig();
       callback();
     },
-    function(){
+    function(callback){
       logger.error('Setting up reverseSSH...')
       setTimeout(function(){
         exec('sudo -u growr ssh -f -v -T -N -R 13200:localhost:22 grow@ezgrowr.com -o StrictHostKeyChecking=no',{async:true}).code;
+        callback();
       }, 2500);
     }
   ]);
@@ -1082,10 +1083,11 @@ function closeSSH () {
       updateBTSConfig();
       callback();
     },
-    function(){
+    function(callback){
       logger.error('Closing tunnel...')
       setTimeout(function(){
         exec('sudo kill $(pidof ssh)').code;  
+        callback();
       }, 1500);
     }
   ]);
@@ -1101,12 +1103,12 @@ function reboot () {
       updateBTSConfig();
       callback();
     },
-    function(){
+    function(callback){
       logger.error('Rebooting...')
       setTimeout(function(){
         execute('shutdown -r now');
+        callback();
       }, 1500);
-
     }
   ]);
 }
@@ -1116,11 +1118,11 @@ function restart () {
   logger.info('restartApp ...');
   async.series ([
     function(callback){
-      restartApp=false;
+      restartApp = false;
       updateBTSConfig();
       callback()
     },
-    function(){
+    function(callback){
       logger.error('Restarting...')
       setTimeout(function(){
         process.exit(0);
@@ -1162,7 +1164,7 @@ function upgrade () {
         callback();
       }, 1000);
     },
-    function(){
+    function(callback){
       logger.error('Reload logrotate ...')
       setTimeout(function(){
         exec('sudo -u growr logrotate -df /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});  
