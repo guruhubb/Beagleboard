@@ -1167,6 +1167,7 @@ function upgrade () {
       logger.error('Reload logrotate ...')
       setTimeout(function(){
         exec('sudo -u growr logrotate -df /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});  
+        callback();
       }, 1000);
     }
   ]);
