@@ -134,7 +134,13 @@ rli.on('line', function(str) {
 // then just listen for the `online` and `offline` events ...
 network.on('online', function() {
   logger.error('++++++++++++ online! +++++++++++++',networkOn);
-  ddpclient.connect();
+  logger.error('restarting dbus ...')
+  setTimeout(function(){
+    exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
+    callback();  
+  }, 1000);
+
+  // ddpclient.connect();
   // noble.stopScanning();
   // logger.info('Stopping scan and restarting app');
   // process.exit(0);
@@ -344,7 +350,10 @@ ddpclient.on('socket-close', function(code, message) {
 
 ddpclient.on('socket-error', function(error) {
   logger.error("DDP SOCKET Error: ", error);
-  setTimeout(function(){ ddpclient.connect();},1000);
+  setTimeout(function(){ 
+    exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
+  },100);
+  setTimeout(function(){ ddpclient.connect();},2000);
   // setTimeout(function(){ process.exit(0); },1000);
 });
 
@@ -363,9 +372,14 @@ function connect(){
         if (error) {
           logger.error('error: DDP connection error!',error);
           // setTimeout(function(){ ddpclient.connect();},2000);
-          noble.stopScanning();
-          logger.info('Stopping scan and restarting app');
-          process.exit(0);
+          setTimeout(function(){ 
+            exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
+          }, 100);
+          setTimeout(function(){ 
+            noble.stopScanning();
+            logger.info('Stopping scan and restarting app');
+            process.exit(0);
+          }, 2000);
           return;
         } 
         logger.info('connected!');
