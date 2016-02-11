@@ -1048,11 +1048,11 @@ function execute(command, callback){
     child(command, function(error, stdout, stderr){ 
       if (error) {
         logger.error('error:',error);
-        callback(error);
+        // callback(error);
       }
       logger.warn('stderr:',stderr);
       logger.info('stdout:', stdout); 
-      callback(stdout);
+      // callback(stdout);
     });
 }
 
