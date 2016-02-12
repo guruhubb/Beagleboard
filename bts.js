@@ -1150,7 +1150,7 @@ function upgrade () {
     function(callback){
       logger.error('Copying upstart and logrotate conf files ...')
       setTimeout(function(){
-        exec('npm update',function(code,output){ logger.error(code);logger.warn(output);});
+        exec('sudo npm update',function(code,output){ logger.error(code);logger.warn(output);});
         exec('sudo cp /home/growr/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output);});
         exec('sudo cp /home/growr/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});
         exec('cp /home/growr/bts/private/privateKey /home/growr/.ssh/id_rsa',function(code,output){ logger.error(code);logger.warn(output);});
@@ -1177,7 +1177,7 @@ function upgrade () {
 
 function getSerialNumber() {
   logger.info('getSerialNumber ...');
-  exec('sudo ./btsSerialNumber.sh',function(code,output){ btsID = output;logger.error(code);logger.warn(output);});  
+  exec('sudo ./btsSerialNumber.sh',function(code,output){ btsID = output;logger.error(code);logger.warn(output);logger.warn('btsID = ',btsID);});  
   // execute('sudo ./btsSerialNumber.sh', function(callback){
   //   btsID = callback;
   //   logger.warn('btsID = ',btsID);
