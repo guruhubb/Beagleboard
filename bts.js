@@ -1123,11 +1123,17 @@ function restart () {
       callback()
     },
     function(callback){
+      logger.error('restarting dbus ...')
+      setTimeout(function(){
+        exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
+      }, 100);
+    },
+    function(callback){
       logger.error('resetting hci ...')
       setTimeout(function(){
         exec('sudo hciconfig hci0 reset',function(code,output){ logger.error(code);logger.warn(output);});
         callback();  
-      }, 100);
+      }, 500);
     },
     function(callback){
       logger.error('Restarting...')
@@ -1146,7 +1152,7 @@ function upgrade () {
       upgradeFW=false;
       updateBTSConfig();
       callback()
-    },
+    }
     function(callback){
       logger.error('Upgrading FW ...')
       setTimeout(function(){
