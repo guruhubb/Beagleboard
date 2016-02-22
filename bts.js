@@ -659,8 +659,10 @@ noble.on('stateChange', function(state) {
     noble.startScanning(readServList);
   } else {
     logger.info('poweredOff')
-    noble.stopScanning();
-    process.exit(0); //exit so that UpStart can restart it
+    setTimeout(function(){
+      noble.stopScanning();
+      process.exit(0); //exit so that UpStart can restart it
+    }, 1000);
   }
 });
 
@@ -1133,14 +1135,14 @@ function restart () {
       setTimeout(function(){
         exec('sudo hciconfig hci0 reset',function(code,output){ logger.error(code);logger.warn(output);});
         callback();  
-      }, 500);
+      }, 100);
     },
     function(callback){
       logger.error('Restarting...')
       setTimeout(function(){
         process.exit(0);
         callback();
-      }, 1500);
+      }, 100);
     }
   ]);
 }
