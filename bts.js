@@ -1123,6 +1123,13 @@ function restart () {
       callback()
     },
     function(callback){
+      logger.error('resetting hci ...')
+      setTimeout(function(){
+        exec('sudo -u growr hciconfig hci0 reset',function(code,output){ logger.error(code);logger.warn(output);});
+        callback();  
+      }, 100);
+    },
+    function(callback){
       logger.error('Restarting...')
       setTimeout(function(){
         process.exit(0);
