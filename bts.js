@@ -1155,7 +1155,7 @@ function upgrade () {
       upgradeFW=false;
       updateBTSConfig();
       callback()
-    }
+    },
     function(callback){
       logger.error('Upgrading FW ...')
       setTimeout(function(){
