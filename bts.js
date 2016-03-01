@@ -380,7 +380,7 @@ function connect(){
           // setTimeout(function(){ ddpclient.connect();},2000);
           setTimeout(function(){ 
 // <<<<<<< HEAD
-            exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
+            // exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
           // }, 100);
           // setTimeout(function(){ 
 // =======
@@ -388,7 +388,8 @@ function connect(){
 // >>>>>>> a913811201057516c0405fdb7aebaf7ff4f7cd1c
             noble.stopScanning();
             logger.info('Stopping scan and restarting app');
-            process.exit(0);
+            // process.exit(0);
+            restart();
           }, 2000);
           return;
         } 
@@ -661,7 +662,8 @@ noble.on('stateChange', function(state) {
     logger.info('poweredOff')
     setTimeout(function(){
       noble.stopScanning();
-      process.exit(0); //exit so that UpStart can restart it
+      restart();
+      // process.exit(0); //exit so that UpStart can restart it
     }, 1000);
   }
 });
