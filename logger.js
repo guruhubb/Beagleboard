@@ -10,8 +10,8 @@ var logger = new winston.Logger({
       json: false,
       // maxsize: 1000000, //~5MB
       // maxFiles: 1,
-      // maxsize: 5242880, //5MB
-      // maxFiles: 20,  //make this 30
+      maxsize: 5242880, //5MB
+      maxFiles: 20,  //make this 30
       colorize: true,
       timestamp: true
     }),
