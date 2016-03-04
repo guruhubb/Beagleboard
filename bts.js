@@ -80,6 +80,7 @@ var readCharListObject = { '39e1fa0384a811e2afba0002a5d5c51b':'sT', '39e1fa0284a
 
 // initial values of global flags, counters, timers
 var exploreOn = true;
+var connected = false;
 var counter = 0;
 var alreadyScanned=0;
 var index = 0;
@@ -396,6 +397,7 @@ function connect(){
         logger.info('connected!');
         if (wasReconnect) {
           logger.info('Reestablishment of a connection');
+          restart();
           // noble.stopScanning();
           // logger.info('Stopping scan and restarting app');
           // process.exit(0);
@@ -671,8 +673,9 @@ noble.on('stateChange', function(state) {
 
 function explore(peripheral,callback) {
   logger.info('exploring sensor');
-
+  
   peripheral.once('disconnect', function() {
+   
     logger.debug('counter: ',counter)
     var stop = Math.floor(Date.now() / 1000);
     logger.debug("-----------------Disconnect----------------")
@@ -686,6 +689,7 @@ function explore(peripheral,callback) {
       logger.debug("connected to ... ",peripheral.uuid);
       if (!peripheral){
         logger.error('Error20 - peripheral error: ',err);
+        peripheral.disconnect();
       } else {
         logger.info("will discover services")
         peripheral.discoverSomeServicesAndCharacteristics(readServList, readCharList, function(error, services, characteristics){
@@ -702,6 +706,8 @@ function explore(peripheral,callback) {
       peripheral.disconnect();
     }
   });
+
+
 }
 function readWriteToBLE (peripheral,services,characteristics) {
   logger.info("readWriteToBLE services")
