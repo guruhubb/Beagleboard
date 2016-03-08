@@ -1174,6 +1174,7 @@ function upgrade () {
     function(callback){
       logger.error('Copying upstart and logrotate conf files ...')
       setTimeout(function(){
+        exec('cd ~/bts/node_modules/',function(code,output){ logger.error(code);logger.warn(output);});
         exec('sudo npm update',function(code,output){ logger.error(code);logger.warn(output);});
         exec('sudo cp /home/growr/bts/bts.conf /etc/init/bts.conf',function(code,output){ logger.error(code);logger.warn(output);});
         exec('sudo cp /home/growr/bts/btsLogrotate /etc/logrotate.d/btsLogrotate',function(code,output){ logger.error(code);logger.warn(output);});
