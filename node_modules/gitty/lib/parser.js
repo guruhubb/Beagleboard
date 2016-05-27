@@ -2,6 +2,8 @@
 * @module gitty/parser
 */
 
+'use strict';
+
 var parsers = {};
 
 /**
@@ -22,7 +24,7 @@ parsers.log = function(output) {
   if (h) {
     for (var i = h.length - 1; i >= 0; i--) {
       var hh = h[i].replace(jsonValueRegex, '$1');
-      var hhh = hh.replace(/\"/g, '\\"').replace(/\'/g, "");
+      var hhh = hh.replace(/\"/g, '\\"').replace(/\'/g, '');
 
       log = log.replace(hh, hhh);
     }

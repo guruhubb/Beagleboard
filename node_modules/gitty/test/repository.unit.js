@@ -1,3 +1,5 @@
+'use strict';
+
 var fs         = require('fs');
 var should     = require('should');
 var rimraf     = require('rimraf');

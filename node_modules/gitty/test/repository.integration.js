@@ -1,3 +1,5 @@
+'use strict';
+
 var fs         = require('fs');
 var should     = require('should');
 var rimraf     = require('rimraf');
@@ -62,12 +64,12 @@ describe('Repository', function() {
   describe('.initSync()', function() {
 
     it('should initialize the new repository', function(done) {
-      repo2.initSync().should.be.true;
+      repo2.initSync().should.equal(true);
       done();
     });
 
     it('should reinitialize the existing repository', function(done) {
-      repo2.initSync().should.be.true;
+      repo2.initSync().should.equal(true);
       done();
     });
 
@@ -79,7 +81,7 @@ describe('Repository', function() {
       fs.writeFile(repo1.path + '/file.txt', 'i am a file', function(err) {
         repo1.status(function(err, status) {
           should.not.exists(err);
-          (status.untracked.indexOf('file.txt') === 0).should.be.true;
+          (status.untracked.indexOf('file.txt') === 0).should.equal(true);
           done();
         });
       });
@@ -91,7 +93,7 @@ describe('Repository', function() {
 
     it('should show a new file in status', function(done) {
       fs.writeFileSync(repo2.path + '/file.txt', 'i am a file');
-      (repo2.statusSync().untracked.indexOf('file.txt') === 0).should.be.true;
+      (repo2.statusSync().untracked.indexOf('file.txt') === 0).should.equal(true);
       done();
     });
 
@@ -169,9 +171,9 @@ describe('Repository', function() {
       fs.writeFileSync(repo1.path + '/testFile.txt', 'i am a file');
       repo1.addSync(['testFile.txt']);
 
-      var commitMessage = "this commit shouldn't fail due to apostrophe, or \"quotation marks";
+      var commitMessage = 'this commit shouldn\'t fail due to apostrophe, or "quotation marks';
 
-      repo1.commitSync(commitMessage.replace(/\"/g, '\\"').replace(/\'/g, "\\'"));
+      repo1.commitSync(commitMessage.replace(/\"/g, '\\"').replace(/\'/g, '\''));
 
       repo1.log(function(err, log) {
         should.not.exist(err);

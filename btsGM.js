@@ -1,6 +1,7 @@
-// bts.js
+// btsGM.js
 // saswata basu, 2015
 // 
+// this file reads from Guy's base which can be connected to several nodes
 // make sure export PATH=$PATH:~/bts is added to /etc/profile
 // echo "export PATH=$PATH:~/bts" | sudo tee -a /etc/profile
 // get data from sensors and send to cloud
@@ -24,12 +25,15 @@ var myRepo = git('~/bts');
 var tunnel = require('tunnel-ssh');
 
 // initialize port and open it to receive data
-// var serialport = require('serialport');
-// var SerialPort = serialport.SerialPort;
-// var port = new SerialPort('/dev/ttyUSB0', {
-//   baudrate: 115200,
-//   parser: serialport.parsers.readline('\n')
-// });
+var macPort = '/dev/cu.usbserial-AI041TNY';
+var beaglePort = '/dev/ttyUSB0';
+var serialport = require('serialport');
+var SerialPort = serialport.SerialPort;
+var port = new SerialPort(beaglePort, {  //change to beaglePort for a beagle
+  baudrate: 115200,
+  parser: serialport.parsers.readline('\n')
+});
+var seqNumber;
 
 require('shelljs/global');
 
@@ -99,8 +103,8 @@ var start = Math.floor(Date.now() / 1000);
 var stop;
 var btsID;
 var networkOn;
-// var btsID = '4414BBBK0072';  //this should be serial number of bbb
-// var sensorID = 'S001';
+var btsID = '4414BBBK0072';  //this should be serial number of bbb
+var sensorID = 'S001';
 
 
 
@@ -125,12 +129,6 @@ rli.on('line', function(str) {
     if (!network.online) {
       network.online = true;
       network.emit('online');
-      // function(){
-      //   logger.error('Restarting...')
-      //   setTimeout(function(){
-          // process.exit(0);
-      //   }, 1500);
-      // }
     }
   } else {
     networkOn = false;
@@ -151,11 +149,6 @@ network.on('online', function() {
   setTimeout(function(){
     exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
   }, 1000);
-
-  // ddpclient.connect();
-  // noble.stopScanning();
-  // logger.info('Stopping scan and restarting app');
-  // process.exit(0);
 }).on('offline', function() {
   logger.error('------------ offline! -------------', networkOn);
 });
@@ -163,39 +156,44 @@ network.on('online', function() {
 
 //send data to cloud as soon as you receive it
 
-// port.on('data', function (data) {
-//   console.log('Data: ' + data);
-//   if (data.toString().charAt(0) === "{") {
-//     var replace = str.replace(/(\w+)=/ig,'"$1":');
-//     var json = replace.replace(/:(\w+)([,\}])/g,':"$1"$2')
-//     var obj = JSON.parse(json);
-//     var sensorData={}
-//     console.log("object:", obj);
-//     convertObjToSensorData(sensorData,obj);
-//     function(callback){
-//           addPlantData(sensorData,callback);
-//     }
-//   }
-//   else {
-//     console.log ('data ignored');
-//   }
-// });
+port.on('data', function (data) {
+  logger.debug('Data: ' + data);
+  var str = data.toString();
+  if (str.charAt(0) === "{") {
+    var replace = str.replace(/(\w+)=/ig,'"$1":');
+    var json = replace.replace(/:(\w+)([,\}])/g,':"$1"$2')
+    var obj = JSON.parse(json);
+    var sensorData={}
+    // check if sequence number is in sequence
+    if (seqNumber != obj["seq"]-1){
+      logger.error ('Out of sequence')
+    }
+    seqNumber = obj["seq"]
+    logger.debug("object:", obj);
+    convertObjToSensorData(sensorData,obj);
+    addPlantData(sensorData);
+  }
+  // else {
+  //   logger.debug ('data ignored');
+  // }
+});
 
-// convertObjToSensorData(sensorData,obj){
-//   sensorData["sn"]=obj["node"]
-//   sensorData["seq"]=obj["seq"]
-//   sensorData["sT"]= 20.0
-//   sensorData["aT"]= 21.0
-//   sensorData["sM"] = 3.2
-//   sensorData["sL"] = 2.5
-//   sensorData["sEC"] = 3.4
-//   sensorData["mD"] = Date.now() / 1000 
-//   sensorData["t"] = Date.now() / 1000 
-//   sensorData["led"] = 1
-//   sensorData["rssi"] = -80
-//   sensorData["txP"] = 0
-//   sensorData["bL"] = 70
-// }
+function convertObjToSensorData(sensorData,obj){
+  sensorData["sn"]=btsSensorList[0]
+  // sensorData["seq"]=obj["seq"]
+  sensorData["sT"]= 1.2
+  sensorData["aT"]= 2.3
+  sensorData["sM"] = 10.2
+  sensorData["sL"] = 2.5
+  sensorData["sEC"] = 3.4
+  sensorData["mD"] = 14560 
+  sensorData["t"] = Date.now() / 1000 
+  sensorData["led"] = 1
+  sensorData["rssi"] = -80
+  sensorData["txP"] = 2
+  sensorData["bL"] = obj['seq']
+  logger.info('sensorData:',sensorData);
+}
 
 
 // run shell command
@@ -257,7 +255,6 @@ ddpclient.on('message', function (msg) {
   msg = ejson.parse(msg);
   if (msg["msg"] === "changed") {
     logger.error("ooooo changed ooooo");
-    console.log("changed");
     if(msg["collection"] === "base-stations"){
       async.series([
         function(callback){
@@ -314,7 +311,6 @@ ddpclient.on('message', function (msg) {
   }
   if (msg["msg"] === "added") {
     logger.error("+++++ added +++++");
-    console.log("added");
     if(msg["collection"] === "base-stations"){
       async.series([
         function(callback){
@@ -391,26 +387,7 @@ ddpclient.on('message', function (msg) {
 
 ddpclient.on('socket-close', function(code, message) {
   logger.error("DDP SOCKET Close: code - ", code," message - ", message);
-  // setTimeout(function(){ ddpclient.connect();},1000);
-  // setTimeout(function(){ process.exit(0); },1000);
 });
-
-// ddpclient.on('socket-error', function(error) {
-//   logger.error("DDP SOCKET Error: ", error);
-//   setTimeout(function(){ 
-// <<<<<<< HEAD
-//     exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
-//   // },100);
-//   // setTimeout(function(){ 
-//     ddpclient.connect();},2000);
-// =======
-//     exec('sudo -u growr service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
-//     ddpclient.connect();
-//   },2000);
-// >>>>>>> a913811201057516c0405fdb7aebaf7ff4f7cd1c
-//   // setTimeout(function(){ process.exit(0); },1000);
-// });
-
 
 connect();
 
@@ -425,18 +402,9 @@ function connect(){
       ddpclient.connect(function(error, wasReconnect) {
         if (error) {
           logger.error('error: DDP connection error!',error);
-          // setTimeout(function(){ ddpclient.connect();},2000);
           setTimeout(function(){ 
-// <<<<<<< HEAD
-            // exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
-          // }, 100);
-          // setTimeout(function(){ 
-// =======
-//             exec('sudo -u growr service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
-// >>>>>>> a913811201057516c0405fdb7aebaf7ff4f7cd1c
             noble.stopScanning();
             logger.info('Stopping scan and restarting app');
-            // process.exit(0);
             restart();
           }, 2000);
           return;
@@ -445,9 +413,6 @@ function connect(){
         if (wasReconnect) {
           logger.info('Reestablishment of a connection');
           restart();
-          // noble.stopScanning();
-          // logger.info('Stopping scan and restarting app');
-          // process.exit(0);
         } 
 
 
@@ -458,445 +423,15 @@ function connect(){
           [btsID],                       // any parameters used by the Publish function
           function (error) {             // callback when the subscription is complete
             if (error){
-              // var collection = ddpclient.collections.bts;
-              // logger.debug('bts collection: ', collection);
-            // } else {
               logger.error('Error9 bts collection subscription error: ', error);
             }
           }
         );
-
-      // noble.connect(btsSensorList[0]);
-      // logger.debug('connected to ------- :',btsSensorList[0]);
-      // logger.debug('read battery value ****** :',readBatteryLevel(noble.read(btsSensorList[0], serviceBattUuid, batteryLevelUuid)));
-
-        noble.on('discover', function(peripheral) {
-          logger.debug('discovered:',peripheral.uuid);
-          noble.stopScanning();
-          if (exploreOn){
-            exploreOn=false;
-            setTimeout(function(){  //stop scan completely first
-              if (isEmpty(sensorObjects)) logger.debug('sensorObjects is empty');
-              // else logger.debug('sensorObjects are:',sensorObjects);
-              // if (btsSensorListDone.length===0) {
-              //   logger.debug("start time: ",start);
-              // }
-              if (btsSensorList.length) { // if sensor list is empty do nothing
-                if (btsSensorList.indexOf(peripheral.uuid.toString()) > -1) {  //check if sensor is on list
-                  if (!(btsSensorListDone.indexOf(peripheral.uuid.toString()) > -1)) {  //check if we have already read sensor
-                    alreadyScanned=0;
-                    sensorObjects[peripheral.uuid]=peripheral;
-                    btsSensorListDone.push(peripheral.uuid);  // add sensor on 'done' list
-                    logger.info('sensor with UUID ' + peripheral.uuid + ' found');
-                      exploreOn = true;
-                      noble.startScanning(readServList);
-                  } 
-                  else {
-                    alreadyScanned++;
-                    stop = Math.floor(Date.now() / 1000);
-                    logger.info('\n already scanned : '+ btsSensorListDone);
-                    logger.info('scanned:',alreadyScanned);
-                    logger.info('scanTime:',scanTime);
-                    logger.info('btsSensorList:',btsSensorList.length);
-                    logger.info('stop-start:',stop-start);
-
-                    var done = arraysEqual(btsSensorListDone,btsSensorList);
-                    if (done || stop-start > scanTime*btsSensorList.length || 
-                      alreadyScanned > btsSensorList.length ) {    
-                      if (done) logger.warn("***** All Sensors accounted for *****");  
-                      counter =0;
-                      alreadyScanned=0;
-                      logger.debug("*************** Done Scanning ***************")
-                      logger.debug("Scan time was ",stop-start,' seconds');
-
-                      // timelapsed = (new Date).getTime()/1000 - timeIn;
-                      // logger.info('timelapsed is ',timelapsed)
-                      // if (timelapsed > 60)
-                          exploreAllSensors();
-                      // else {
-                      //     logger.info('timeout for 60s...')
-                      //     setTimeout(function(){
-                      //         exploreAllSensors();
-                      //     }, 1000*minReadInterval);
-                      // }
-                      // timeIn = (new Date).getTime()/1000;
-                      // exploreAllSensors()
-                      // async.whilst(
-                      //   function () {
-                      //     logger.debug("index is: ",index, " number of sensors: ",length);
-                      //     return (index < length);  
-                      //   },
-                      //   function(callback) {
-                      //     async.series([
-                      //       function(callback) { 
-                      //         logger.warn('exploring...',keys[index]);
-                      //         timelapsed = (new Date).getTime()/1000 - timeIn;
-                      //         timeIn = (new Date).getTime()/1000;
-                      //         if (timelapsed > 60)
-                      //           explore(sensorObjects[keys[index]],callback);
-                      //         else {
-                      //           logger.info('timeout for 60s...')
-                      //           setTimeout(function(){
-                      //                       explore(sensorObjects[keys[index]],callback);
-                      //                   }, 1000*minReadInterval);
-                      //         }
-                      //       },
-                      //       function(callback) {
-                      //         index++;
-                      //         // if list is done exploring
-                      //         if (index > length-1  ){
-                      //             async.series ([
-                      //               function(callback){
-                      //                 // check if Led is ON
-                      //                 sensorLedOnCheck();
-                      //                 logger.warn('check if Led is ON:',index);
-                      //                 callback();
-                      //               },
-                      //               function(callback){
-                      //                 // check if sensor has been removed by cloud
-                      //                 checkSensorObjectsList();
-                      //                 length = Object.keys(sensorObjects).length;
-                      //                 keys = Object.keys(sensorObjects);
-                      //                 logger.warn('checkSensorObjectsList:',length);
-                      //                 callback();
-                      //               }, 
-                      //               function(callback){
-                      //                 // check if list is complete or any sensor additions from cloud
-                      //                 if (!arraysEqual(btsSensorListDone,btsSensorList)) {
-                      //                   logger.info('scanning again ...')
-                      //                   start = Math.floor(Date.now() / 1000);
-                      //                   //scan again if we are missing some sensors on the list
-                      //                   setTimeout(function(){
-                      //                       exploreOn = true;
-                      //                       noble.startScanning(readServList);
-                      //                       callback();
-                      //                   }, 500);
-                      //                 } else {
-                      //                   logger.info('reset index to 0 ...');
-                      //                   index = 0;
-                      //                   callback();
-                      //                 }
-                      //                 logger.warn('index is:',index);
-                      //                 // callback();
-                      //               }, function(){
-                      //                 callback();
-                      //               }
-                      //             ])
-                      //         } else {
-                      //             callback();
-                      //         }
-                      //       }, 
-                      //       function(){
-                      //         callback();
-                      //       }
-                      //     ]);
-                      //   },
-                      //   function() {
-                      //     logger.info('++++++++ Done exploring all sensors on list ++++++++');
-                      //   }
-                      // );
-                    } else {
-                      exploreOn = true;
-                      noble.startScanning(readServList);
-                    }
-                  }
-                } else {
-                  exploreOn = true;
-                  noble.startScanning(readServList);
-                }
-              } else {
-                logger.error('Error12: BTS Sensor List is empty');
-                noble.startScanning(readServList);
-              }
-            }, 500);
-          } else {
-            logger.debug('Looking at previous sensor...discarding current discovery');
-          }
-        });
         callback();
       });
     }
   ])
 }
-
-function exploreAllSensors (){
-  var keys = Object.keys(sensorObjects);
-  var index = 0;
-  var length = Object.keys(sensorObjects).length;
-  async.whilst(
-    function () {
-      logger.debug("index is: ",index, " number of sensors: ",length);
-      return (index < length);  
-    },
-    function(callback) {
-      async.series([
-        function(callback) { 
-          logger.warn('exploring...',keys[index]);
-          timelapsed = (new Date).getTime()/1000 - timeIn;
-          logger.info('timelapsed is ',timelapsed);
-          timeIn = (new Date).getTime()/1000;
-          if (timelapsed > minReadInterval || index != 0)
-            explore(sensorObjects[keys[index]],callback);
-          else {
-            logger.info('timeout for minReadInterval ...')
-            setTimeout(function(){
-              explore(sensorObjects[keys[index]],callback);
-              }, 1000*(minReadInterval-timelapsed));
-          }
-        },
-        function(callback) {
-          index++;
-          // if list is done exploring
-          if (index > length-1  ){
-              async.series ([
-                function(callback){
-                  // check if Led is ON
-                  sensorLedOnCheck();
-                  logger.warn('check if Led is ON:',index);
-                  callback();
-                },
-                function(callback){
-                  // check if sensor has been removed by cloud
-                  checkSensorObjectsList();
-                  length = Object.keys(sensorObjects).length;
-                  keys = Object.keys(sensorObjects);
-                  logger.warn('checkSensorObjectsList:',length);
-                  callback();
-                }, 
-                function(callback){
-                  // check if list is complete or any sensor additions from cloud
-                  if (!arraysEqual(btsSensorListDone,btsSensorList)) {
-                    logger.info('scanning again ...')
-                    start = Math.floor(Date.now() / 1000);
-                    //scan again if we are missing some sensors on the list
-                    setTimeout(function(){
-                        exploreOn = true;
-                        noble.startScanning(readServList);
-                        callback();
-                    }, 500);
-                  } else {
-                    logger.info('reset index to 0 ...');
-                    index = 0;
-                    callback();
-                  }
-                  logger.warn('index is:',index);
-                  // callback();
-                }, function(){
-                  callback();
-                }
-              ])
-          } else {
-              callback();
-          }
-        }, 
-        function(){
-          callback();
-        }
-      ]);
-    },
-    function() {
-      logger.info('++++++++ Done exploring all sensors on list ++++++++');
-    }
-  );
-}
-
-// if app is powered on start scanning, else exit app
-noble.on('stateChange', function(state) {
-  if (state === 'poweredOn') {
-    logger.info('poweredOn');
-    // logger.info('readServList:',readServList);
-    exploreOn = true;
-    noble.startScanning(readServList);
-  } else {
-    logger.info('poweredOff')
-    setTimeout(function(){
-      noble.stopScanning();
-      restart();
-      // process.exit(0); //exit so that UpStart can restart it
-    }, 1000);
-  }
-});
-
-
-function explore(peripheral,callback) {
-  logger.info('exploring sensor');
-  
-  peripheral.once('disconnect', function() {
-   
-    logger.debug('counter: ',counter)
-    var stop = Math.floor(Date.now() / 1000);
-    logger.debug("-----------------Disconnect----------------")
-    logger.debug("Time elapsed to explore: ",stop-start);
-    callback();
-  });
-
-  peripheral.connect(function(err) {
-    logger.info('inside connect function...');
-    if (!err) {
-      logger.debug("connected to ... ",peripheral.uuid);
-      if (!peripheral){
-        logger.error('Error20 - peripheral error: ',err);
-        peripheral.disconnect();
-      } else {
-        logger.info("will discover services")
-        peripheral.discoverSomeServicesAndCharacteristics(readServList, readCharList, function(error, services, characteristics){
-          if (!error){
-            readWriteToBLE(peripheral,services,characteristics);
-          } else {
-            logger.error('Error2 - Discover Services error: ',error);
-            peripheral.disconnect();
-          }
-        });
-      }
-    } else { 
-      logger.error('Error1 - Sensor connect error: ',err);
-      peripheral.disconnect();
-    }
-  });
-  
-  setTimeout(function(){
-    logger.error('Error21 - Time is up, calling back to previous function...')
-    callback();
-  }, maxExploreTime);
-
-}
-function readWriteToBLE (peripheral,services,characteristics) {
-  logger.info("readWriteToBLE services")
-  // logger.info("services: ",services.length);
-  // logger.info("characteristics: ",characteristics.length);
-  var sensorData={};
-  var serviceIndex = 0;  //start at sensor data service, skip first 3 services
-  async.whilst(
-    function () {
-      return (serviceIndex < services.length-2);  //skip last two services
-    },
-    function(callback) {
-      // logger.warn('service:',services[serviceIndex].uuid.toString());
-      var serviceInfo = services[serviceIndex].uuid;
-      var characteristicIndex = 0;
-      async.whilst(
-        function () {
-          return (characteristicIndex < characteristics.length);
-        },
-        function(callback) {
-          // logger.warn('characteristic:',characteristics[characteristicIndex].uuid.toString());
-          var characteristic = characteristics[characteristicIndex];
-          var characteristicInfo = characteristic.uuid.toString();
-
-          //read/write data if characteristic is on list
-          async.series ([
-            function() {
-              if (characteristicInfo in readCharListObject) {
-                if (characteristic.properties.indexOf('read') !== -1) {
-                  characteristic.read(function(error, data) {
-                    if (error){
-                      logger.error('Error5 - Characteristic Read error: ', error);
-                    } else {
-                      if (data) {
-                        // logger.info('serviceInfo:',serviceInfo,'characteristicInfo:',characteristicInfo);
-                        switch (readCharListObject[characteristicInfo]){
-                          case 'sT':
-                              data=convertTemperatureData(data).toFixed(4);
-                              break;
-                          case 'sEC':
-                              data=convertSoilElectricalConductivityData(data).toFixed(4);
-                              break;
-                          case 'sM':
-                              data=convertSoilMoistureData(data).toFixed(4);
-                              break;
-                          case 'aT':
-                              data=convertTemperatureData(data).toFixed(4);
-                              break;
-                          case 'sL':
-                              data=convertSunlightData(data).toFixed(4);
-                              break;
-                          case 'mD':
-                              data=readLastMovedDate(data);
-                              break;                                        
-                          case 't':
-                              data=getStartupTime(data);
-                              break;
-                          case 'bL':
-                              data=readBatteryLevel(data);
-                              break;
-                          case 'led':
-                              // data=readLedStatus(data);
-                              if ((characteristicInfo === ledStatusUuid) && btsSensorListObjects[peripheral.uuid]){  // if led is configured to be ON, then turn it ON
-                              // logger.error('checking ledStatus');  // led is always off initially because it always goes off upon disconnect
-                              // if (btsSensorListObjects[peripheral.uuid]){  //if config list value is true
-                                logger.error('********  turning on LED LED LED ********');
-                                characteristic.write(new Buffer([0x01]), false, function(err){
-                                  if(err){
-                                   logger.error('Error15: write led error'); 
-                                  }
-                                });  //todo - error check
-                                // data=1;
-                              }
-                              data=readLedStatus(data);
-                              break;
-                          default:
-                              logger.error('Error6 - Characteristic not part of list');
-                        }
-                      } else {
-                        logger.error('Error7 - Bad Characteristic Data');
-                      }
-                      sensorData[readCharListObject[characteristicInfo]]= data;
-                      // logger.warn(characteristicIndex,'  ---  ', sensorData);
-                    }
-                    characteristicIndex++;
-                    callback();
-                  });
-                } else {
-                  characteristicIndex++;
-                  callback();
-                }
-              } 
-            },
-            function(){
-              characteristicIndex++;
-            }
-          ]);
-        },
-        function() {
-          serviceIndex++;
-          callback();
-        }
-      );
-    },
-    function () {
-      async.series([ 
-        function(callback){
-          counter++;
-          sensorData['rssi']=peripheral.rssi;
-          sensorData['txP']=peripheral.advertisement.txPowerLevel;
-          sensorData['sn']=peripheral.uuid;
-          logger.debug('sensorData:',sensorData);
-          callback();
-        },
-        function(callback){
-          addPlantData(sensorData,callback);
-        },
-        function(){  // if led is ON then have it blink on for 1.5s
-          if (sensorData['led']){
-            setTimeout(function(){
-              if (peripheral){
-                peripheral.disconnect();
-              }
-            }, blinkInterval);
-          } else {
-            setTimeout(function(){
-              if (peripheral){
-                peripheral.disconnect();                
-              }
-            }, 100);          
-          }
-        }               
-      ]);
-    }
-  );
-}
-
-
 
 // call cloud to set the sensor config to current state
 function updateSensorConfig(sn,led){
@@ -932,24 +467,17 @@ function updateBTSConfig(){
         logger.warn('called resetBTSConfig: ', result );
         if (err){
           logger.error('Error11 - DDP update BTS config error: ',err);  
-          // process.exit(0);
         }
       },
       function () {                 // fires when server has finished
         logger.debug('done resetBTSConfig');  
-        // callback();
       }
     );
   }
 }
 
 // send plant data to cloud
-function addPlantData(sensorData,callback){
-  // network.on('online', function() {
-  //   logger.error('++++++++++++ online! addPlantdata +++++++++++++');
-  // }).on('offline', function() {
-  //   logger.error('------------ offline! addPlantdata -------------');
-  // });
+function addPlantData(sensorData){
   if (networkOn){
     logger.info('inside addPlantdata')
     ddpclient.call(
@@ -959,12 +487,10 @@ function addPlantData(sensorData,callback){
         logger.debug('called addPlantdata: ', result);
         if (err){
           logger.error('Error4 - DDP upload data error: ',err);  
-           // process.exit(0);
         }
       },
       function () {              // fires when server has finished
         logger.debug('updated');  
-        // callback();
       }
     );
   }
@@ -1004,7 +530,6 @@ function readServiceFile(file){
       return null;
     }
     data = JSON.parse(data);
-    console.dir(data);
     return data;
   });
 }
@@ -1256,11 +781,6 @@ function upgrade () {
 function getSerialNumber() {
   logger.info('getSerialNumber ...');
   exec('sudo ./btsSerialNumber.sh',function(code,output){ btsID = output;logger.error(code);logger.warn(output);logger.warn('btsID = ',btsID);});  
-  // execute('sudo ./btsSerialNumber.sh', function(callback){
-  //   btsID = callback;
-  //   logger.warn('btsID = ',btsID);
-  //   // btsID='4414BBBK0072'
-  // });
 }
 
 

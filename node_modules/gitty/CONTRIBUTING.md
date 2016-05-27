@@ -48,7 +48,7 @@ constructor, and below is how you might do it. In `lib/repository.js`:
 // we want to pass a branch name and callback into this method
 Repository.prototype.createBranchAndCheckout = function(name, callback) {
   var self = this;
-  var cmd  = new Command(self.path, 'checkout', ['-b'], name);
+  var cmd  = new Command(self, 'checkout', ['-b'], name);
 
   cmd.exec(function(error, stdout, stderr) {
     callback(error || stderr || null);
@@ -76,7 +76,7 @@ for Gitty).
 // we want to pass a branch name and callback into this method
 Repository.prototype.createBranchAndCheckoutSync = function(name, callback) {
   var self = this
-  var cmd  = new Command(self.path, 'checkout', ['-b'], name);
+  var cmd  = new Command(self, 'checkout', ['-b'], name);
 
   return cmd.execSync();
 };

@@ -1,3 +1,5 @@
+'use strict';
+
 var fs       = require('fs');
 var should   = require('should');
 var rimraf   = require('rimraf');
@@ -91,7 +93,7 @@ describe('Gitty', function() {
       Gitty.clone(HOME + '/.gitty/cloneto', url, function(err) {
         should.not.exist(err);
         fs.exists(HOME + '/.gitty/cloneto/file', function(exists) {
-          exists.should.be.true;
+          exists.should.equal(true);
           done();
         });
       });
