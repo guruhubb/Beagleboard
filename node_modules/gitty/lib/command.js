@@ -1,7 +1,3 @@
-/**
-* @module gitty/command
-*/
-
 'use strict';
 
 var childproc = require('child_process');
@@ -9,7 +5,7 @@ var exec = childproc.exec;
 var execSync = childproc.execSync;
 
 /**
-* Setup function for running GIT commands on the command line
+* Setup function for running git commands on the command line
 * @constructor
 * @param {Repository} repo
 * @param {string} operation
@@ -39,7 +35,6 @@ var Command = function(repo, operation, flags, options) {
 
 /**
 * Executes the stored operation in the given path
-* #exec
 * @param {function} callback
 */
 Command.prototype.exec = function(callback) {
@@ -48,7 +43,6 @@ Command.prototype.exec = function(callback) {
 
 /**
 * Executes the stored operation in the given path syncronously
-* #execSync
 */
 Command.prototype.execSync = function() {
   process.chdir(this.repo.path);
@@ -57,7 +51,7 @@ Command.prototype.execSync = function() {
 
 /**
 * Return options to be passed to exec/execSync
-* #_getExecOptions
+* @private
 */
 Command.prototype._getExecOptions = function() {
   return {
@@ -66,9 +60,4 @@ Command.prototype._getExecOptions = function() {
   };
 };
 
-/**
-* Export Contructor
-* @constructor
-* @type {object}
-*/
 module.exports = Command;

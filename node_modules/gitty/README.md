@@ -5,6 +5,8 @@
 Gitty is a Node.js wrapper for Git. It's syntax resembles the Git command line
 syntax, executes common commands, and parses the output into operable objects.
 
+**[Complete documentation is available here.](http://gordonwritescode.github.io/gitty)**
+
 ## Installation
 
 ### Prerequisites
@@ -40,12 +42,6 @@ myRepo.log(function(err, log) {
 	// ...
 });
 ```
-
-### Where are the Docs?
-
-For now, use the source, Luke. Pretty much everything you'll need is in
-`lib/repository.js` and it's very readable. Running the test suite will be of
-use as well since all public methods are tested and will print to the console.
 
 ## Authenticated Repositories
 

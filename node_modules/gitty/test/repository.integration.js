@@ -78,10 +78,10 @@ describe('Repository', function() {
   describe('.status()', function() {
 
     it('should show a new file in status', function(done) {
-      fs.writeFile(repo1.path + '/file.txt', 'i am a file', function(err) {
+      fs.writeFile(repo1.path + '/File.txt', 'I am a file.', function(err) {
         repo1.status(function(err, status) {
           should.not.exists(err);
-          (status.untracked.indexOf('file.txt') === 0).should.equal(true);
+          (status.untracked.indexOf('File.txt') === 0).should.equal(true);
           done();
         });
       });
@@ -92,8 +92,8 @@ describe('Repository', function() {
   describe('.statusSync()', function() {
 
     it('should show a new file in status', function(done) {
-      fs.writeFileSync(repo2.path + '/file.txt', 'i am a file');
-      (repo2.statusSync().untracked.indexOf('file.txt') === 0).should.equal(true);
+      fs.writeFileSync(repo2.path + '/File.txt', 'I am a file.');
+      (repo2.statusSync().untracked.indexOf('File.txt') === 0).should.equal(true);
       done();
     });
 
@@ -102,11 +102,12 @@ describe('Repository', function() {
   describe('.add()', function() {
 
     it('should stage a file for commit', function(done) {
-      repo1.add(['file.txt'], function(err) {
+      repo1.add(['File.txt'], function(err) {
         should.not.exist(err);
         repo1.status(function(err, status) {
           should.not.exists(err);
           status.staged.should.have.lengthOf(1);
+          status.staged[0].file.should.equal('File.txt');
           done();
         });
       });
@@ -116,9 +117,10 @@ describe('Repository', function() {
 
   describe('.addSync()', function() {
 
-    it('should stage a file for commit', function(done) {
-      repo2.addSync(['file.txt']);
+    it('should stage a File for commit', function(done) {
+      repo2.addSync(['File.txt']);
       repo2.statusSync().staged.should.have.lengthOf(1);
+      repo2.statusSync().staged[0].file.should.equal('File.txt');
       done();
     });
 
@@ -200,12 +202,13 @@ describe('Repository', function() {
   describe('.unstage()', function() {
 
     it('should unstage a file from commit', function(done) {
-      fs.writeFile(repo1.path + '/file.txt', 'modified file', function(err) {
-        repo1.add(['file.txt'], function(err) {
-          repo1.unstage(['file.txt'], function(err) {
+      fs.writeFile(repo1.path + '/File.txt', 'modified file', function(err) {
+        repo1.add(['File.txt'], function(err) {
+          repo1.unstage(['File.txt'], function(err) {
             should.not.exist(err);
             repo1.status(function(err, status) {
               status.unstaged.should.have.lengthOf(1);
+              status.unstaged[0].file.should.equal('File.txt');
               done();
             });
           });
@@ -218,10 +221,11 @@ describe('Repository', function() {
   describe('.unstageSync()', function() {
 
     it('should unstage a file from commit', function(done) {
-      fs.writeFileSync(repo2.path + '/file.txt', 'modified file');
-      repo2.addSync(['file.txt']);
-      repo2.unstageSync(['file.txt']);
+      fs.writeFileSync(repo2.path + '/File.txt', 'modified file');
+      repo2.addSync(['File.txt']);
+      repo2.unstageSync(['File.txt']);
       repo2.statusSync().unstaged.should.have.lengthOf(1);
+      repo2.statusSync().unstaged[0].file.should.equal('File.txt');
       done();
     });
 
@@ -230,12 +234,13 @@ describe('Repository', function() {
   describe('.remove()', function() {
 
     it('should remove an added file', function(done) {
-      fs.writeFile(repo1.path + '/file1.txt', 'i am a file', function(err) {
-        repo1.add(['file1.txt'], function(err) {
-          repo1.remove(['file1.txt'], function(err) {
+      fs.writeFile(repo1.path + '/File1.txt', 'i am a file', function(err) {
+        repo1.add(['File1.txt'], function(err) {
+          repo1.remove(['File1.txt'], function(err) {
             should.not.exist(err);
             repo1.status(function(err, status) {
               status.untracked.should.have.lengthOf(1);
+              status.untracked[0].should.equal('File1.txt');
               done();
             });
           });
@@ -248,10 +253,11 @@ describe('Repository', function() {
   describe('.removeSync()', function() {
 
     it('should remove an added file', function(done) {
-      fs.writeFileSync(repo2.path + '/file1.txt', 'i am a file');
-      repo2.addSync(['file1.txt']);
-      repo2.removeSync(['file1.txt']);
+      fs.writeFileSync(repo2.path + '/File1.txt', 'i am a file');
+      repo2.addSync(['File1.txt']);
+      repo2.removeSync(['File1.txt']);
       repo2.statusSync().untracked.should.have.lengthOf(1);
+      repo2.statusSync().untracked[0].should.equal('File1.txt');
       done();
     });
 
@@ -336,7 +342,7 @@ describe('Repository', function() {
   describe('.merge()', function() {
 
     it('should merge a branch into the current branch', function(done) {
-      repo1.add(['file1.txt'], function(err) {
+      repo1.add(['File1.txt'], function(err) {
         repo1.commit('add file', function(err) {
           repo1.checkout('master', function(err) {
             repo1.merge('test', function(err) {
@@ -356,7 +362,7 @@ describe('Repository', function() {
   describe('.mergeSync()', function() {
 
     it('should merge a branch into the current branch', function(done) {
-      repo2.addSync(['file1.txt']);
+      repo2.addSync(['File1.txt']);
       repo2.commitSync('add file');
       repo2.checkoutSync('master');
       repo2.mergeSync('test');
@@ -558,9 +564,9 @@ describe('Repository', function() {
 
     it('should apply changes from another commit', function(done) {
       repo1.checkout('test', function(err) {
-        fs.writeFile('cherry.txt', 'cherrypickme', function(err) {
-          repo1.add(['cherry.txt'], function(err) {
-            repo1.commit('cherrypickme', function(err) {
+        fs.writeFile('cheRRy.txt', 'cherrypickme', function(err) {
+          repo1.add(['cheRRy.txt'], function(err) {
+            repo1.commit('cheRRypickme', function(err) {
               repo1.log(function(err, log) {
                 repo1.checkout('master', function(err) {
                   repo1.cherryPick(log[0].commit, function(err) {
@@ -584,8 +590,8 @@ describe('Repository', function() {
 
     it('should apply changes from another commit', function(done) {
       repo2.checkoutSync('test');
-      fs.writeFileSync('cherry.txt', 'cherrypickme');
-      repo2.addSync(['cherry.txt']);
+      fs.writeFileSync('cheRRy.txt', 'cherrypickme');
+      repo2.addSync(['cheRRy.txt']);
       repo2.commitSync('cherrypickme');
       var log = repo2.logSync();
       repo2.checkoutSync('master');
@@ -626,14 +632,14 @@ describe('Repository', function() {
   describe('.show()', function() {
 
     it('should return a specific revision of a file from a commit ID', function(done) {
-      fs.writeFile(repo1.path + '/show.txt', 'showTest rev 1', function(err) {
-        repo1.add([repo1.path + '/show.txt'], function(err) {
+      fs.writeFile(repo1.path + '/Show.txt', 'showTest rev 1', function(err) {
+        repo1.add([repo1.path + '/Show.txt'], function(err) {
           repo1.commit('showTest', function(err) {
-            fs.writeFile(repo1.path + '/show.txt', 'showTest rev 2', function(err) {
-              repo1.add([repo1.path + '/show.txt'], function(err) {
+            fs.writeFile(repo1.path + '/Show.txt', 'showTest rev 2', function(err) {
+              repo1.add([repo1.path + '/Show.txt'], function(err) {
                 repo1.commit('showTest change', function(err) {
                   repo1.log(function(err, log) {
-                    repo1.show(log[1].commit, './show.txt', function(err, data) {
+                    repo1.show(log[1].commit, './Show.txt', function(err, data) {
                       data.should.equal('showTest rev 1');
                       done();
                     });
@@ -653,16 +659,16 @@ describe('Repository', function() {
     it('should return a specific revision of a file from a commit ID', function(done) {
       repo2.checkoutSync('test');
 
-      fs.writeFileSync('show.txt', 'showTest rev 1');
-      repo2.addSync(['show.txt']);
+      fs.writeFileSync('Show.txt', 'showTest rev 1');
+      repo2.addSync(['Show.txt']);
       repo2.commitSync('showTest');
 
-      fs.writeFileSync('show.txt', 'showTest rev 2');
-      repo2.addSync(['show.txt']);
+      fs.writeFileSync('Show.txt', 'showTest rev 2');
+      repo2.addSync(['Show.txt']);
       repo2.commitSync('showTest change');
 
       var log = repo2.logSync();
-      var testText = repo2.showSync(log[1].commit, './show.txt');
+      var testText = repo2.showSync(log[1].commit, './Show.txt');
 
       testText.should.equal('showTest rev 1');
       done();

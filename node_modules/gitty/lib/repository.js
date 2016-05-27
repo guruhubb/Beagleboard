@@ -1,7 +1,3 @@
-/**
-* @module gitty/repository
-*/
-
 'use strict';
 
 var fs = require('fs');
@@ -18,12 +14,16 @@ if (require('os').platform() === 'win32') {
 }
 
 /**
-* Constructor function for all repository commands
+* Represents a Git repository
 * @constructor
 * @param {string} repo
 * @param {string} gitpath
 */
 var Repository = function(repo, gitpath) {
+  if (!(this instanceof Repository)) {
+    return new Repository(repo, gitpath);
+  }
+
   var self = this;
 
   events.EventEmitter.call(this);
@@ -44,8 +44,7 @@ var Repository = function(repo, gitpath) {
 util.inherits(Repository, events.EventEmitter);
 
 /**
-* Initializes the given directory as a GIT repository
-* #init
+* Initializes the given directory as a git repository
 * @param {array} flags
 * @param {function} callback
 */
@@ -68,8 +67,7 @@ Repository.prototype.init = function() {
 };
 
 /**
-* Initializes the given directory as a GIT repository
-* #initSync
+* Initializes the given directory as a git repository
 * @param {array} flags
 * @param {function} callback
 */
@@ -88,7 +86,6 @@ Repository.prototype.initSync = function() {
 
 /**
 * Forwards the commit history to the callback function
-* #log
 * @param {string} path - optional branch or path
 * @param {function} callback
 */
@@ -110,7 +107,6 @@ Repository.prototype.log = function() {
 
 /**
 * Returns the commit history
-* #logSync
 * @param {string} branch
 */
 Repository.prototype.logSync = function(branch) {
@@ -121,8 +117,7 @@ Repository.prototype.logSync = function(branch) {
 };
 
 /**
-* Forwards the GIT status object to the callback function
-* #status
+* Forwards the git status object to the callback function
 * @param {array} flags
 * @param {function} callback
 */
@@ -150,8 +145,7 @@ Repository.prototype.status = function() {
 };
 
 /**
-* Returns the GIT status object
-* #statusSync
+* Returns the git status object
 * @param {array} flags
 */
 Repository.prototype.statusSync = function(flags) {
@@ -164,7 +158,6 @@ Repository.prototype.statusSync = function(flags) {
 
 /**
 * Stages the passed array of files for commiting
-* #add
 * @param {array} files
 * @param {array} flags
 * @param {function} callback
@@ -188,7 +181,6 @@ Repository.prototype.add = function() {
 
 /**
 * Stages the passed array of files for commiting
-* #addSync
 * @param {array} files
 * @param {array} flags
 */
@@ -201,7 +193,6 @@ Repository.prototype.addSync = function(files, flags) {
 
 /**
 * Removes the passed array of files from the repo for commiting
-* #remove
 * @param {array} files
 * @param {function} callback
 */
@@ -224,7 +215,6 @@ Repository.prototype.remove = function() {
 
 /**
 * Removes the passed array of files from the repo for commiting
-* #removeSync
 * @param {array} files
 * @param {array} flags
 */
@@ -237,7 +227,6 @@ Repository.prototype.removeSync = function(files, flags) {
 
 /**
 * Unstages the passed array of files from the staging area
-* #unstage
 * @param {array} files
 * @param {array} flags
 * @param {function} callback
@@ -261,7 +250,6 @@ Repository.prototype.unstage = function() {
 
 /**
 * Unstages the passed array of files from the staging area
-* #unstageSync
 * @param {array} files
 * @param {array} flags
 */
@@ -274,7 +262,6 @@ Repository.prototype.unstageSync = function(files, flags) {
 
 /**
 * Commits the staged area with the given message
-* #commit
 * @param {string} message
 * @param {array} flags
 * @param {function} callback
@@ -303,7 +290,6 @@ Repository.prototype.commit = function() {
 
 /**
 * Commits the staged area with the given message
-* #commitSync
 * @param {string} message
 * @param {array} flags
 */
@@ -323,7 +309,6 @@ Repository.prototype.commitSync = function(message, flags) {
 
 /**
 * Forwards object with the current branch and all others to the callback
-* #getBranches
 * @param {function} callback
 */
 Repository.prototype.getBranches = function(callback) {
@@ -342,7 +327,6 @@ Repository.prototype.getBranches = function(callback) {
 
 /**
 * Returns a denoted object with the current branch and all other branches
-* #getBranchesSync
 * @param {function} callback
 */
 Repository.prototype.getBranchesSync = function() {
@@ -354,7 +338,6 @@ Repository.prototype.getBranchesSync = function() {
 
 /**
 * Creates a new branch with the given branch name
-* #createBranch
 * @param {string} name
 * @param {array} flags
 * @param {function} callback
@@ -378,7 +361,6 @@ Repository.prototype.createBranch = function() {
 
 /**
 * Creates a new branch with the given branch name
-* #createBranchSync
 * @param {string} name
 * @param {array} flags
 */
@@ -390,8 +372,7 @@ Repository.prototype.createBranchSync = function(name, flags) {
 };
 
 /**
-* Performs a GIT checkout on the given branch
-* #checkout
+* Performs a git checkout on the given branch
 * @param {string} branch
 * @param {array} flags
 * @param {function} callback
@@ -414,8 +395,7 @@ Repository.prototype.checkout = function() {
 };
 
 /**
-* Performs a GIT checkout on the given branch
-* #checkoutSync
+* Performs a git checkout on the given branch
 * @param {string} branch
 * @param {array} flags
 */
@@ -429,8 +409,7 @@ Repository.prototype.checkoutSync = function(branch, flags) {
 };
 
 /**
-* Performs a GIT merge in the current branch against the specified one
-* #merge
+* Performs a git merge in the current branch against the specified one
 * @param {string} branch
 * @param {array} flags
 * @param {function} callback
@@ -453,8 +432,7 @@ Repository.prototype.merge = function() {
 };
 
 /**
-* Performs a GIT merge in the current branch against the specified one
-* #mergeSync
+* Performs a git merge in the current branch against the specified one
 * @param {string} branch
 */
 Repository.prototype.mergeSync = function(branch, flags) {
@@ -466,7 +444,6 @@ Repository.prototype.mergeSync = function(branch, flags) {
 
 /**
 * Forwards a array of repositorys'tags to the callback function
-* #getTags
 * @param {function} callback
 */
 Repository.prototype.getTags = function(callback) {
@@ -485,7 +462,6 @@ Repository.prototype.getTags = function(callback) {
 
 /**
 * Forwards a array of repositorys'tags to the callback function
-* #getTagsSync
 */
 Repository.prototype.getTagsSync = function() {
   var self = this;
@@ -496,7 +472,6 @@ Repository.prototype.getTagsSync = function() {
 
 /**
 * Creates a new tag from the given tag name
-* #createTag
 * @param {string} name
 * @param {array} flags
 * @param {function} callback
@@ -520,7 +495,6 @@ Repository.prototype.createTag = function() {
 
 /**
 * Creates a new tag from the given tag name
-* #createTagSync
 * @param {string} name
 * @param {array} flags
 */
@@ -533,7 +507,6 @@ Repository.prototype.createTagSync = function(name, flags) {
 
 /**
 * Adds a new remote
-* #addRemote
 * @param {string} remote
 * @param {string} url
 * @param {array} flags
@@ -559,7 +532,6 @@ Repository.prototype.addRemote = function() {
 
 /**
 * Adds a new remote
-* #addRemoteSync
 * @param {string} remote
 * @param {string} url
 * @param {array} flags
@@ -573,7 +545,6 @@ Repository.prototype.addRemoteSync = function(remote, url, flags) {
 
 /**
 * Changes the URL of a existing remote
-* #setRemoteUrl
 * @param {string} remote
 * @param {string} url
 * @param {array} flags
@@ -599,7 +570,6 @@ Repository.prototype.setRemoteUrl = function() {
 
 /**
 * Changes the URL of a existing remote
-* #setRemoteUrlSync
 * @param {string} remote
 * @param {string} url
 * @param {array} flags
@@ -614,7 +584,6 @@ Repository.prototype.setRemoteUrlSync = function(remote, url, flags) {
 
 /**
 * Removes the given remote
-* #removeRemote
 * @param {string} remote
 * @param {array} flags
 * @param {function} callback
@@ -638,7 +607,6 @@ Repository.prototype.removeRemote = function() {
 
 /**
 * Removes the given remote
-* #removeRemoteSync
 * @param {string} remote
 * @param {array} flags
 */
@@ -651,7 +619,6 @@ Repository.prototype.removeRemoteSync = function(remote, flags) {
 
 /**
 * Forwards a key-value list (remote : url) to the callback function
-* #getRemotes
 * @param  {Function} callback
 */
 Repository.prototype.getRemotes = function(callback) {
@@ -670,7 +637,6 @@ Repository.prototype.getRemotes = function(callback) {
 
 /**
 * Returns a key-value list (remote : url)
-* getRemotesSync
 * @param {function} callback
 */
 Repository.prototype.getRemotesSync = function() {
@@ -682,7 +648,6 @@ Repository.prototype.getRemotesSync = function() {
 
 /**
 * Performs a GIT push to the given remote for the given branch name
-* #push
 * @param {string} remote
 * @param {string} branch
 * @param {array} flags
@@ -716,7 +681,6 @@ Repository.prototype.push = function() {
 
 /**
 * Performs a GIT pull from the given remote with the given branch name
-* #pull
 * @param {string} remote
 * @param {string} branch
 * @param {array} flags
@@ -749,8 +713,7 @@ Repository.prototype.pull = function() {
 };
 
 /**
-* Performs a GIT fetch from the given remote
-* #fetch
+* Performs a git fetch from the given remote
 * @param {string} remote
 * @param {array} flags
 * @param {function} callback
@@ -766,10 +729,6 @@ Repository.prototype.fetch = function() {
   cmd.exec(done);
 };
 
-/**
-* @param {object} options
-* @param {function} callback
-*/
 function sync(repo, opts, callback) {
   var done = callback || function() { };
   var flags = opts.flags || [];
@@ -784,7 +743,6 @@ function sync(repo, opts, callback) {
 
 /**
 * Resets the repository's HEAD to the specified commit
-* #reset
 * @param {string} hash
 * @param {function} callback
 */
@@ -810,7 +768,6 @@ Repository.prototype.reset = function(hash, callback) {
 
 /**
 * Resets the repository's HEAD to the specified commit
-* #resetSync
 * @param {string} hash
 */
 Repository.prototype.resetSync = function(hash) {
@@ -824,7 +781,6 @@ Repository.prototype.resetSync = function(hash) {
 
 /**
 * Forwards the current commit hash to the callback function
-* #describe
 * @param {function} callback
 */
 Repository.prototype.describe = function(callback) {
@@ -843,7 +799,6 @@ Repository.prototype.describe = function(callback) {
 
 /**
 * Returns the current commit hash
-* #describeSync
 */
 Repository.prototype.describeSync = function() {
   var self = this;
@@ -854,7 +809,6 @@ Repository.prototype.describeSync = function() {
 
 /**
 * Allows cherry-picking
-* #cherryPick
 * @param {string} commit - commit hash
 * @param {function} callback
 * @param {array} flags
@@ -877,7 +831,6 @@ Repository.prototype.cherryPick = function() {
 
 /**
 * Allows cherry-picking
-* #cherryPickSync
 * @param {string} commit - commit hash
 * @param {function} callback
 * @param {array} flags
@@ -891,7 +844,6 @@ Repository.prototype.cherryPickSync = function(commit, flags) {
 
 /**
 * Allows show
-* #show
 * @param {string} commit
 * @param {string} filePath - full path of the file relative to the repo
 * @param {function} callback
@@ -912,7 +864,6 @@ Repository.prototype.show = function(commit, filePath, callback) {
 
 /**
 * Allows show
-* #showSync
 * @param {string} commit - commit hash
 * @param {string} filePath - full path of the file relative to the repo
 */
@@ -925,7 +876,80 @@ Repository.prototype.showSync = function(commit, filePath) {
 };
 
 /**
- * Export Constructor
- * @type {object}
- */
+* Handles the global git configuration
+* @function
+* @param {string} key
+* @param {string} val
+* @param {function} callback
+*/
+Repository.setConfig = function(key, val, callback) {
+  var cmd = new Command(null, 'config', ['--global', key], '"' + val + '"');
+  var done = callback || function() {};
+
+  cmd.exec(function(err, stdout, stderr) {
+    done(err || null);
+  });
+};
+
+/**
+* Handles the global git configuration
+* @function
+* @param {string} key
+* @param {string} val
+* @param {function} callback
+*/
+Repository.setConfigSync = function(key, val) {
+  var cmd = new Command(null, 'config', ['--global', key], '"' + val + '"');
+
+  return cmd.execSync();
+};
+
+/**
+* Handles the global git configuration
+* @function
+* @param {string} key
+* @param {function} callback
+*/
+Repository.getConfig = function(key, callback) {
+  var cmd = new Command(null, 'config', ['--global', key]);
+  var done = callback || function() {};
+
+  cmd.exec(function(err, stdout, stderr) {
+    done(err || null, stdout);
+  });
+};
+
+/**
+* Handles the global git configuration
+* @function
+* @param {string} key
+* @param {function} callback
+*/
+Repository.getConfigSync = function(key) {
+  var cmd = new Command(null, 'config', ['--global', key]);
+
+  return cmd.execSync();
+};
+
+/**
+* Wrapper for the git clone function
+* @function
+* @param {string} path
+* @param {string} url
+* @param {object} creds
+* @param {function} callback
+*/
+Repository.clone = function(path, url) {
+  var self = this;
+  var args = Array.prototype.slice.apply(arguments);
+  var creds = args[2].username ? args[2] : {};
+  var done = args.slice(-1).pop() || function() {};
+  var clone = new Command(null, 'clone', [url, path]);
+  var error = null;
+
+  clone.exec(function(err, stdout, stderr) {
+    done(err);
+  });
+};
+
 module.exports = Repository;
