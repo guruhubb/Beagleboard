@@ -161,42 +161,6 @@ network.on('online', function() {
 });
 
 
-//send data to cloud as soon as you receive it
-
-// port.on('data', function (data) {
-//   console.log('Data: ' + data);
-//   if (data.toString().charAt(0) === "{") {
-//     var replace = str.replace(/(\w+)=/ig,'"$1":');
-//     var json = replace.replace(/:(\w+)([,\}])/g,':"$1"$2')
-//     var obj = JSON.parse(json);
-//     var sensorData={}
-//     console.log("object:", obj);
-//     convertObjToSensorData(sensorData,obj);
-//     function(callback){
-//           addPlantData(sensorData,callback);
-//     }
-//   }
-//   else {
-//     console.log ('data ignored');
-//   }
-// });
-
-// convertObjToSensorData(sensorData,obj){
-//   sensorData["sn"]=obj["node"]
-//   sensorData["seq"]=obj["seq"]
-//   sensorData["sT"]= 20.0
-//   sensorData["aT"]= 21.0
-//   sensorData["sM"] = 3.2
-//   sensorData["sL"] = 2.5
-//   sensorData["sEC"] = 3.4
-//   sensorData["mD"] = Date.now() / 1000 
-//   sensorData["t"] = Date.now() / 1000 
-//   sensorData["led"] = 1
-//   sensorData["rssi"] = -80
-//   sensorData["txP"] = 0
-//   sensorData["bL"] = 70
-// }
-
 
 // run shell command
 function run_cmd(cmd, args, callBack ) {
@@ -395,21 +359,6 @@ ddpclient.on('socket-close', function(code, message) {
   // setTimeout(function(){ process.exit(0); },1000);
 });
 
-// ddpclient.on('socket-error', function(error) {
-//   logger.error("DDP SOCKET Error: ", error);
-//   setTimeout(function(){ 
-// <<<<<<< HEAD
-//     exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
-//   // },100);
-//   // setTimeout(function(){ 
-//     ddpclient.connect();},2000);
-// =======
-//     exec('sudo -u growr service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
-//     ddpclient.connect();
-//   },2000);
-// >>>>>>> a913811201057516c0405fdb7aebaf7ff4f7cd1c
-//   // setTimeout(function(){ process.exit(0); },1000);
-// });
 
 
 connect();
@@ -427,13 +376,7 @@ function connect(){
           logger.error('error: DDP connection error!',error);
           // setTimeout(function(){ ddpclient.connect();},2000);
           setTimeout(function(){ 
-// <<<<<<< HEAD
-            // exec('sudo service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
-          // }, 100);
-          // setTimeout(function(){ 
-// =======
-//             exec('sudo -u growr service dbus restart',function(code,output){ logger.error(code);logger.warn(output);});
-// >>>>>>> a913811201057516c0405fdb7aebaf7ff4f7cd1c
+
             noble.stopScanning();
             logger.info('Stopping scan and restarting app');
             // process.exit(0);
@@ -513,88 +456,7 @@ function connect(){
                       // logger.info('timelapsed is ',timelapsed)
                       // if (timelapsed > 60)
                           exploreAllSensors();
-                      // else {
-                      //     logger.info('timeout for 60s...')
-                      //     setTimeout(function(){
-                      //         exploreAllSensors();
-                      //     }, 1000*minReadInterval);
-                      // }
-                      // timeIn = (new Date).getTime()/1000;
-                      // exploreAllSensors()
-                      // async.whilst(
-                      //   function () {
-                      //     logger.debug("index is: ",index, " number of sensors: ",length);
-                      //     return (index < length);  
-                      //   },
-                      //   function(callback) {
-                      //     async.series([
-                      //       function(callback) { 
-                      //         logger.warn('exploring...',keys[index]);
-                      //         timelapsed = (new Date).getTime()/1000 - timeIn;
-                      //         timeIn = (new Date).getTime()/1000;
-                      //         if (timelapsed > 60)
-                      //           explore(sensorObjects[keys[index]],callback);
-                      //         else {
-                      //           logger.info('timeout for 60s...')
-                      //           setTimeout(function(){
-                      //                       explore(sensorObjects[keys[index]],callback);
-                      //                   }, 1000*minReadInterval);
-                      //         }
-                      //       },
-                      //       function(callback) {
-                      //         index++;
-                      //         // if list is done exploring
-                      //         if (index > length-1  ){
-                      //             async.series ([
-                      //               function(callback){
-                      //                 // check if Led is ON
-                      //                 sensorLedOnCheck();
-                      //                 logger.warn('check if Led is ON:',index);
-                      //                 callback();
-                      //               },
-                      //               function(callback){
-                      //                 // check if sensor has been removed by cloud
-                      //                 checkSensorObjectsList();
-                      //                 length = Object.keys(sensorObjects).length;
-                      //                 keys = Object.keys(sensorObjects);
-                      //                 logger.warn('checkSensorObjectsList:',length);
-                      //                 callback();
-                      //               }, 
-                      //               function(callback){
-                      //                 // check if list is complete or any sensor additions from cloud
-                      //                 if (!arraysEqual(btsSensorListDone,btsSensorList)) {
-                      //                   logger.info('scanning again ...')
-                      //                   start = Math.floor(Date.now() / 1000);
-                      //                   //scan again if we are missing some sensors on the list
-                      //                   setTimeout(function(){
-                      //                       exploreOn = true;
-                      //                       noble.startScanning(readServList);
-                      //                       callback();
-                      //                   }, 500);
-                      //                 } else {
-                      //                   logger.info('reset index to 0 ...');
-                      //                   index = 0;
-                      //                   callback();
-                      //                 }
-                      //                 logger.warn('index is:',index);
-                      //                 // callback();
-                      //               }, function(){
-                      //                 callback();
-                      //               }
-                      //             ])
-                      //         } else {
-                      //             callback();
-                      //         }
-                      //       }, 
-                      //       function(){
-                      //         callback();
-                      //       }
-                      //     ]);
-                      //   },
-                      //   function() {
-                      //     logger.info('++++++++ Done exploring all sensors on list ++++++++');
-                      //   }
-                      // );
+                   
                     } else {
                       exploreOn = true;
                       noble.startScanning(readServList);
